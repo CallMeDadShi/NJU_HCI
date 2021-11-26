@@ -1,0 +1,225 @@
+Index: front_end/src/views/user/info.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><template>\r\n    <div class=\"info-wrapper\">\r\n        <a-tabs>\r\n            <a-tab-pane tab=\"我的信息\" key=\"1\">\r\n                <a-form :form=\"form\" style=\"margin-top: 30px\">\r\n                    <a-form-item label=\"头像\" :label-col=\"{ span: 3 }\" :wrapper-col=\"{ span: 8, offset: 1 }\">\r\n                        <a-avatar\r\n                                shape=\"square\"\r\n                                size=\"large\"\r\n                                :style=\"{ backgroundColor: color, verticalAlign: 'middle' }\"\r\n                        >\r\n                            {{ avatarValue }}\r\n                        </a-avatar>\r\n                        <a-divider type=\"vertical\" ></a-divider>\r\n                        <a-button\r\n                                size=\"small\"\r\n                                :style=\"{ marginLeft: 16, verticalAlign: 'middle' }\"\r\n                                @click=\"changeValue\"\r\n                                v-if=\"modify\"\r\n                        >\r\n                            改变\r\n                        </a-button>\r\n                    </a-form-item>\r\n                    <a-form-item label=\"用户名\" :label-col=\"{ span: 3 }\" :wrapper-col=\"{ span: 8, offset: 1  }\">\r\n                        <a-input\r\n                                placeholder=\"请填写用户名\"\r\n                                v-decorator=\"['userName', { rules: [{ required: true, message: '请输入用户名' }] }]\"\r\n                                v-if=\"modify\"\r\n                        />\r\n                        <span v-else>{{ userInfo.userName }}</span>\r\n                    </a-form-item>\r\n                    <a-form-item label=\"邮箱\" :label-col=\"{ span: 3 }\" :wrapper-col=\"{ span: 8, offset: 1 }\">\r\n                        <span>{{ userInfo.email }}</span>\r\n                    </a-form-item>\r\n\r\n                    <a-form-item label=\"出生日期\" :label-col=\"{ span: 3 }\" :wrapper-col=\"{ span: 8, offset: 1 }\">\r\n                        <a-date-picker\r\n                                v-if=\"modify\"\r\n                                format=\"YYYY-MM-DD\"\r\n                                v-decorator=\"[\r\n                        'date',\r\n                        {\r\n                            rules: [{ required: true, message: '请输入出生日期' }]\r\n                        }\r\n                    ]\"\r\n                                :placeholder=\"'出生日期'\"\r\n                        />\r\n                        <a-date-picker v-else :default-value=\"moment(userInfo.birthday, 'YYYY-MM-DD')\" disabled></a-date-picker>\r\n                    </a-form-item>\r\n\r\n                    <a-form-item label=\"手机号\" :label-col=\"{ span: 3 }\" :wrapper-col=\"{ span: 8, offset: 1 }\">\r\n                        <a-input\r\n                                placeholder=\"请填写手机号\"\r\n                                v-decorator=\"['phoneNumber', { rules: [{ required: true, message: '请输入手机号' }] }]\"\r\n                                v-if=\"modify\"\r\n                        />\r\n                        <span v-else>{{ userInfo.phoneNumber}}</span>\r\n                    </a-form-item>\r\n                    <a-form-item label=\"信用值\" :label-col=\"{ span: 3 }\" :wrapper-col=\"{ span: 8, offset: 1 }\">\r\n                        <span>{{ userInfo.credit }}</span>\r\n                    </a-form-item>\r\n                    <a-form-item label=\"密码\" :label-col=\"{ span: 3 }\" :wrapper-col=\"{ span: 8, offset: 1 }\" v-if=\"modify\">\r\n                        <a-input\r\n                                placeholder=\"请输入新密码\"\r\n                                v-decorator=\"['password', { rules: [{ required: true, message: '请输入新密码' }] }]\"\r\n                        />\r\n                    </a-form-item>\r\n                    <a-form-item :wrapper-col=\"{ span: 12, offset: 5 }\" v-if=\"modify\">\r\n                        <a-button type=\"primary\" @click=\"saveModify\">\r\n                            保存\r\n                        </a-button>\r\n                        <a-button type=\"default\" style=\"margin-left: 30px\" @click=\"cancelModify\">\r\n                            取消\r\n                        </a-button>\r\n                    </a-form-item>\r\n                    <a-form-item :wrapper-col=\"{ span: 8, offset: 4 }\" v-else>\r\n                        <a-button type=\"primary\" @click=\"modifyInfo\">\r\n                            修改信息\r\n                        </a-button>\r\n                    </a-form-item>\r\n                </a-form>\r\n            </a-tab-pane>\r\n            <a-tab-pane tab=\"我的订单\" key=\"2\" v-if=\"userInfo.userType=='Client'\">\r\n                <a-table\r\n                        :columns=\"columns\"\r\n                        :dataSource=\"userOrderList\"\r\n                        bordered\r\n                >\r\n                    <span slot=\"price\" slot-scope=\"text\">\r\n                        <span>￥{{ text }}</span>\r\n                    </span>\r\n                    <span slot=\"roomType\" slot-scope=\"text\">\r\n                        <span v-if=\"text == 'BigBed'\">大床房</span>\r\n                        <span v-if=\"text == 'DoubleBed'\">双床房</span>\r\n                        <span v-if=\"text == 'Family'\">家庭房</span>\r\n                    </span>\r\n                    <a-tag slot=\"orderState\" color=\"blue\" slot-scope=\"text\">\r\n                        {{ text }}\r\n                    </a-tag>\r\n                    <span slot=\"action\" slot-scope=\"record\">\r\n<!--                        <a-button type=\"primary\" size=\"small\">查看</a-button>-->\r\n<!--                        <a-divider type=\"vertical\" v-if=\"record.orderState == '已预订'\"></a-divider>-->\r\n                        <a-popconfirm\r\n                                title=\"你确定撤销该笔订单吗？\"\r\n                                @confirm=\"confirmCancelOrder(record.id)\"\r\n                                @cancel=\"cancelCancelOrder\"\r\n                                okText=\"确定\"\r\n                                cancelText=\"取消\"\r\n                                v-if=\"record.orderState == '已预订'\"\r\n                        >\r\n                            <a-button type=\"danger\" size=\"small\">撤销</a-button>\r\n                        </a-popconfirm>\r\n<!--                        <a-divider type=\"vertical\" v-if=\"record.orderState == '已入住'\"></a-divider>-->\r\n                       <a-popconfirm\r\n                               title=\"你确定删除该笔订单的历史记录吗？\"\r\n                               @confirm=\"confirmCancelOrder(record.id)\"\r\n                               @cancel=\"cancelCancelOrder\"\r\n                               okText=\"确定\"\r\n                               cancelText=\"取消\"\r\n                               v-if=\"record.orderState === '已入住'\"\r\n                       >\r\n                            <a-button type=\"danger\" size=\"small\" v-if=\"record.orderState === '已入住'\">删除</a-button>\r\n                        </a-popconfirm>\r\n                        <a-divider type=\"vertical\" v-if=\"record.orderState === '已入住'\"></a-divider>\r\n                        <a-button type=\"primary\" size=\"small\" v-if=\"record.orderState==='已入住'\" @click=\"addcomment(record)\"><a-icon type=\"plus\" />评价</a-button>\r\n\r\n                    </span>\r\n                </a-table>\r\n            </a-tab-pane>\r\n            <a-tab-pane tab=\"会员中心\" key=\"3\" v-if=\"userInfo.userType==='Client'\">\r\n                <div class=\"vip-info\">\r\n                    <a-card style=\"width: 300px;\">\r\n                        <img\r\n                                alt=\"example\"\r\n                                src=\"https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png\"\r\n                                slot=\"cover\"\r\n                                referrerPolicy=\"no-referrer\"\r\n                        />\r\n                    </a-card>\r\n                    <div class=\"info\">\r\n                        <text v-if=\"userInfo.corporationName==''\">xx</text>\r\n<!--                        <a-form :form=\"form\" style=\"margin-top: 10px\">-->\r\n<!--                            <a-form-item label=\"酒店名称\" :label-col=\"{ span: 10 }\" :wrapper-col=\"{ span: 10, offset: 3  }\">-->\r\n<!--                                <a-input-->\r\n<!--                                        placeholder=\"请填写酒店名称\"-->\r\n<!--                                        v-decorator=\"['name', { rules: [{ required: true, message: '请输入酒店名称' }] }]\"-->\r\n<!--                                        v-if=\"modify\"-->\r\n<!--                                />-->\r\n<!--                                <span v-else>{{ currentHotelInfo.name }}</span>-->\r\n<!--                            </a-form-item>-->\r\n<!--                            <a-form-item label=\"地址\" :label-col=\"{ span: 10 }\" :wrapper-col=\"{ span: 10, offset: 3 }\">-->\r\n<!--                                <a-input-->\r\n<!--                                        placeholder=\"请填写酒店地址\"-->\r\n<!--                                        v-decorator=\"['address', { rules: [{ required: true, message: '请输入酒店地址' }] }]\"-->\r\n<!--                                        v-if=\"modify\"-->\r\n<!--                                />-->\r\n<!--                                <span v-else>{{ currentHotelInfo.address }}</span>-->\r\n<!--                            </a-form-item>-->\r\n<!--                            <a-form-item label=\"商圈\" :label-col=\"{ span: 10 }\" :wrapper-col=\"{ span: 10, offset: 3 }\">-->\r\n<!--                                <a-input-->\r\n<!--                                        placeholder=\"请填写酒店所在商圈\"-->\r\n<!--                                        v-decorator=\"['bizRegion', { rules: [{ required: true, message: '请输入酒店所在商圈' }] }]\"-->\r\n<!--                                        v-if=\"modify\"-->\r\n<!--                                />-->\r\n<!--                                <span v-else>{{ currentHotelInfo.bizRegion }}</span>-->\r\n<!--                            </a-form-item>-->\r\n<!--                            <a-form-item label=\"评分\" :label-col=\"{ span: 10 }\" :wrapper-col=\"{ span: 10, offset: 3 }\">-->\r\n<!--                                <span  class=\"value\">{{ currentHotelInfo.rate }}</span>-->\r\n<!--                            </a-form-item>-->\r\n\r\n<!--                            <a-form-item label=\"星级\" :label-col=\"{ span: 10 }\" :wrapper-col=\"{ span: 10, offset: 3 }\">-->\r\n<!--                                <a-rate style=\"font-size: 15px\" v-if=\"modify\" v-model=\"values\"/>-->\r\n<!--                                <a-rate style=\"font-size: 15px\" :value=\"currentHotelInfo.hotelStar\" v-else disabled/>-->\r\n<!--                            </a-form-item>-->\r\n\r\n<!--                            <a-form-item label=\"酒店简介\" :label-col=\"{ span: 10 }\" :wrapper-col=\"{ span: 10, offset: 3 }\">-->\r\n<!--                                <a-input-->\r\n<!--                                        placeholder=\"请填写酒店简介\"-->\r\n<!--                                        v-decorator=\"['description', { rules: [{ required: true, message: '请输入酒店简介' }] }]\"-->\r\n<!--                                        v-if=\"modify\"-->\r\n<!--                                />-->\r\n<!--                                <span v-else>{{ currentHotelInfo.description }}</span>-->\r\n<!--                            </a-form-item>-->\r\n<!--                            <a-form-item :wrapper-col=\"{ span: 12, offset: 5 }\" v-if=\"modify\">-->\r\n<!--                                <a-button type=\"primary\" @click=\"saveModify\">-->\r\n<!--                                    保存-->\r\n<!--                                </a-button>-->\r\n<!--                                <a-button type=\"default\" style=\"margin-left: 10px\" @click=\"cancelModify\">-->\r\n<!--                                    取消-->\r\n<!--                                </a-button>-->\r\n<!--                            </a-form-item>-->\r\n<!--                            <a-form-item :wrapper-col=\"{ span: 8, offset: 4 }\" v-else-if=\"userInfo.userType=='HotelManager'\" >-->\r\n<!--                                <a-button type=\"primary\" @click=\"modifyInfo\" >-->\r\n<!--                                    修改信息-->\r\n<!--                                </a-button>-->\r\n<!--                            </a-form-item>-->\r\n<!--                        </a-form>-->\r\n\r\n                    </div>\r\n                </div>\r\n            </a-tab-pane>\r\n        </a-tabs>\r\n        <AddCommentModal></AddCommentModal>\r\n    </div>\r\n</template>\r\n<script>\r\n    import {getUserInfoAPI} from \"../../api/user\";\r\n    const moment = require('moment')\r\n    const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];\r\n    import { mapGetters, mapMutations, mapActions } from 'vuex'\r\n    import AddCommentModal from './components/addComment'\r\n    const columns = [\r\n        {\r\n            title: '订单号',\r\n            dataIndex: 'id',\r\n        },\r\n        {\r\n            title: '酒店名',\r\n            dataIndex: 'hotelName',\r\n        },\r\n        {\r\n            title: '房型',\r\n            dataIndex: 'roomType',\r\n            scopedSlots: { customRender: 'roomType' }\r\n        },\r\n        {\r\n            title: '入住时间',\r\n            dataIndex: 'checkInDate',\r\n            scopedSlots: { customRender: 'checkInDate' }\r\n        },\r\n        {\r\n            title: '离店时间',\r\n            dataIndex: 'checkOutDate',\r\n            scopedSlots: { customRender: 'checkOutDate' }\r\n        },\r\n        {\r\n            title: '入住人数',\r\n            dataIndex: 'peopleNum',\r\n        },\r\n        {\r\n            title: '房价',\r\n            dataIndex: 'price',\r\n        },\r\n        {\r\n            title: '状态',\r\n            filters: [{ text: '已预订', value: '已预订' }, { text: '已撤销', value: '已撤销' }, { text: '已入住', value: '已入住' }],\r\n            onFilter: (value, record) => record.orderState.includes(value),\r\n            dataIndex: 'orderState',\r\n            scopedSlots: { customRender: 'orderState' }\r\n        },\r\n        {\r\n            title: '操作',\r\n            key: 'action',\r\n            scopedSlots: { customRender: 'action' },\r\n        },\r\n\r\n    ];\r\n    export default {\r\n        name: 'info',\r\n        data(){\r\n            return {\r\n                avatarValue:\"1\",\r\n                color: colorList[0],\r\n                modify: false,\r\n                formLayout: 'horizontal',\r\n                pagination: {},\r\n                columns,\r\n                data: [],\r\n                form: this.$form.createForm(this, { name: 'coordinated' }),\r\n            }\r\n        },\r\n        components: {\r\n            AddCommentModal,\r\n\r\n        },\r\n        computed: {\r\n            ...mapGetters([\r\n                'userId',\r\n                'userInfo',\r\n                'userOrderList',\r\n                'addCommentVisible',\r\n                'activeOrderId',\r\n            ])\r\n        },\r\n        async mounted() {\r\n            await this.getUserInfo()\r\n            await this.getUserOrders()\r\n            this.avatarValue=this.userInfo.userName\r\n        },\r\n        methods: {\r\n            moment,\r\n            changeValue() {\r\n                const index = colorList.indexOf(this.color);\r\n                this.color = index < colorList.length - 1 ? colorList[index + 1] : colorList[0];\r\n            },\r\n            ...mapMutations([\r\n                'set_addCommentVisible',\r\n                'set_activeOrderId',\r\n                'set_commentParams'\r\n            ]),\r\n            ...mapActions([\r\n                'getUserInfo',\r\n                'getUserOrders',\r\n                'updateUserInfo',\r\n                'cancelOrder'\r\n            ]),\r\n            saveModify() {\r\n                this.form.validateFields((err, values) => {\r\n                    if (!err) {\r\n                        const data = {\r\n                            userName: this.form.getFieldValue('userName'),\r\n                            phoneNumber: this.form.getFieldValue('phoneNumber'),\r\n                            password: this.form.getFieldValue('password'),\r\n                            avatarValue:this.form.getFieldValue('userName'),\r\n                            birthday: this.form.getFieldValue('date').format('YYYY-MM-DD'),\r\n                        }\r\n                        this.avatarValue=data.userName\r\n                        this.updateUserInfo(data).then(()=>{\r\n                            this.modify = false\r\n                        })\r\n                    }\r\n                });\r\n            },\r\n            modifyInfo() {\r\n                setTimeout(() => {\r\n                    this.form.setFieldsValue({\r\n                        'userName': this.userInfo.userName,\r\n                        'phoneNumber': this.userInfo.phoneNumber,\r\n                        'birthday':this.userInfo.birthday,\r\n                    })\r\n                }, 0)\r\n                this.modify = true\r\n            },\r\n            cancelModify() {\r\n                this.modify = false\r\n            },\r\n            confirmCancelOrder(orderId){\r\n                this.cancelOrder(orderId)\r\n            },\r\n            cancelCancelOrder() {\r\n\r\n            },\r\n            addcomment(record){\r\n                this.set_activeOrderId(record.id);\r\n\r\n                this.set_commentParams({\r\n                    userId:this.userId,\r\n                    userName:this.userInfo.userName,\r\n                    credit:this.userInfo.credit,\r\n                    orderId:record.id,\r\n                    hotelId:record.hotelId,\r\n                    color:colorList[Math.floor(Math.random()*colorList.length)]\r\n                })\r\n                this.set_addCommentVisible(true);\r\n            }\r\n\r\n        }\r\n    }\r\n</script>\r\n<style scoped lang=\"less\">\r\n    .info-wrapper {\r\n        padding: 50px;\r\n        .chart {\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: space-between;\r\n            margin-top: 20px\r\n        }\r\n    }\r\n</style>\r\n<style lang=\"less\">\r\n    .info-wrapper {\r\n        .ant-tabs-bar {\r\n            padding-left: 30px\r\n        }\r\n    }\r\n</style>\r\n<style lang=\"less\">\r\n\r\n</style>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- front_end/src/views/user/info.vue	(revision 2eff9cb5fa9f8561c3b026fee38adbe70fd3f2ae)
++++ front_end/src/views/user/info.vue	(date 1593704767015)
+@@ -129,74 +129,93 @@
+             </a-tab-pane>
+             <a-tab-pane tab="会员中心" key="3" v-if="userInfo.userType==='Client'">
+                 <div class="vip-info">
+-                    <a-card style="width: 300px;">
++                    <div class="info">
++                        <a-form :form="form" style="margin-top: 30px">
++                            <a-form-item label="头像" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
++                                <a-avatar
++                                        shape="square"
++                                        size="large"
++                                        :style="{ backgroundColor: color, verticalAlign: 'middle' }"
++                                >
++                                    {{ avatarValue }}
++                                </a-avatar>
++                                <a-divider type="vertical" ></a-divider>
++                                <a-button
++                                        size="small"
++                                        :style="{ marginLeft: 16, verticalAlign: 'middle' }"
++                                        @click="changeValue"
++                                        v-if="modify"
++                                >
++                                    改变
++                                </a-button>
++                            </a-form-item>
++                            <a-form-item label="用户名" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1  }">
++                                <a-input
++                                        placeholder="请填写用户名"
++                                        v-decorator="['userName', { rules: [{ required: true, message: '请输入用户名' }] }]"
++                                        v-if="modify"
++                                />
++                                <span v-else>{{ userInfo.userName }}</span>
++                            </a-form-item>
++                            <a-form-item label="邮箱" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
++                                <span>{{ userInfo.email }}</span>
++                            </a-form-item>
++
++                            <a-form-item label="出生日期" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
++                                <a-date-picker
++                                        v-if="modify"
++                                        format="YYYY-MM-DD"
++                                        v-decorator="[
++                        'date',
++                        {
++                            rules: [{ required: true, message: '请输入出生日期' }]
++                        }
++                    ]"
++                                        :placeholder="'出生日期'"
++                                />
++                                <a-date-picker v-else :default-value="moment(userInfo.birthday, 'YYYY-MM-DD')" disabled></a-date-picker>
++                            </a-form-item>
++
++                            <a-form-item label="手机号" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
++                                <a-input
++                                        placeholder="请填写手机号"
++                                        v-decorator="['phoneNumber', { rules: [{ required: true, message: '请输入手机号' }] }]"
++                                        v-if="modify"
++                                />
++                                <span v-else>{{ userInfo.phoneNumber}}</span>
++                            </a-form-item>
++                            <a-form-item label="信用值" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
++                                <span>{{ userInfo.credit }}</span>
++                            </a-form-item>
++                            <a-form-item label="密码" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }" v-if="modify">
++                                <a-input
++                                        placeholder="请输入新密码"
++                                        v-decorator="['password', { rules: [{ required: true, message: '请输入新密码' }] }]"
++                                />
++                            </a-form-item>
++                            <a-form-item :wrapper-col="{ span: 12, offset: 5 }" v-if="modify">
++                                <a-button type="primary" @click="saveModify">
++                                    保存
++                                </a-button>
++                                <a-button type="default" style="margin-left: 30px" @click="cancelModify">
++                                    取消
++                                </a-button>
++                            </a-form-item>
++                            <a-form-item :wrapper-col="{ span: 8, offset: 4 }" v-else>
++                                <a-button type="primary" @click="modifyInfo">
++                                    修改信息
++                                </a-button>
++                            </a-form-item>
++                        </a-form>
++                    </div>
++                    <a-card style="width: 600px;">
+                         <img
+                                 alt="example"
+-                                src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
++                                src="https://pic2.zhimg.com/v2-5b024964872620cbdeb69b7027e13767_r.jpg"
+                                 slot="cover"
+                                 referrerPolicy="no-referrer"
+                         />
+                     </a-card>
+-                    <div class="info">
+-                        <text v-if="userInfo.corporationName==''">xx</text>
+-<!--                        <a-form :form="form" style="margin-top: 10px">-->
+-<!--                            <a-form-item label="酒店名称" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3  }">-->
+-<!--                                <a-input-->
+-<!--                                        placeholder="请填写酒店名称"-->
+-<!--                                        v-decorator="['name', { rules: [{ required: true, message: '请输入酒店名称' }] }]"-->
+-<!--                                        v-if="modify"-->
+-<!--                                />-->
+-<!--                                <span v-else>{{ currentHotelInfo.name }}</span>-->
+-<!--                            </a-form-item>-->
+-<!--                            <a-form-item label="地址" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">-->
+-<!--                                <a-input-->
+-<!--                                        placeholder="请填写酒店地址"-->
+-<!--                                        v-decorator="['address', { rules: [{ required: true, message: '请输入酒店地址' }] }]"-->
+-<!--                                        v-if="modify"-->
+-<!--                                />-->
+-<!--                                <span v-else>{{ currentHotelInfo.address }}</span>-->
+-<!--                            </a-form-item>-->
+-<!--                            <a-form-item label="商圈" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">-->
+-<!--                                <a-input-->
+-<!--                                        placeholder="请填写酒店所在商圈"-->
+-<!--                                        v-decorator="['bizRegion', { rules: [{ required: true, message: '请输入酒店所在商圈' }] }]"-->
+-<!--                                        v-if="modify"-->
+-<!--                                />-->
+-<!--                                <span v-else>{{ currentHotelInfo.bizRegion }}</span>-->
+-<!--                            </a-form-item>-->
+-<!--                            <a-form-item label="评分" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">-->
+-<!--                                <span  class="value">{{ currentHotelInfo.rate }}</span>-->
+-<!--                            </a-form-item>-->
+-
+-<!--                            <a-form-item label="星级" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">-->
+-<!--                                <a-rate style="font-size: 15px" v-if="modify" v-model="values"/>-->
+-<!--                                <a-rate style="font-size: 15px" :value="currentHotelInfo.hotelStar" v-else disabled/>-->
+-<!--                            </a-form-item>-->
+-
+-<!--                            <a-form-item label="酒店简介" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">-->
+-<!--                                <a-input-->
+-<!--                                        placeholder="请填写酒店简介"-->
+-<!--                                        v-decorator="['description', { rules: [{ required: true, message: '请输入酒店简介' }] }]"-->
+-<!--                                        v-if="modify"-->
+-<!--                                />-->
+-<!--                                <span v-else>{{ currentHotelInfo.description }}</span>-->
+-<!--                            </a-form-item>-->
+-<!--                            <a-form-item :wrapper-col="{ span: 12, offset: 5 }" v-if="modify">-->
+-<!--                                <a-button type="primary" @click="saveModify">-->
+-<!--                                    保存-->
+-<!--                                </a-button>-->
+-<!--                                <a-button type="default" style="margin-left: 10px" @click="cancelModify">-->
+-<!--                                    取消-->
+-<!--                                </a-button>-->
+-<!--                            </a-form-item>-->
+-<!--                            <a-form-item :wrapper-col="{ span: 8, offset: 4 }" v-else-if="userInfo.userType=='HotelManager'" >-->
+-<!--                                <a-button type="primary" @click="modifyInfo" >-->
+-<!--                                    修改信息-->
+-<!--                                </a-button>-->
+-<!--                            </a-form-item>-->
+-<!--                        </a-form>-->
+-
+-                    </div>
+                 </div>
+             </a-tab-pane>
+         </a-tabs>
+Index: front_end/src/views/hotel/components/roomList.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><template>\r\n    <div class=\"room-list\">\r\n        <div class=\"filter\">\r\n\r\n        </div>\r\n\r\n        <div style=\"width: 100%; text-align: right; margin:20px 0\">\r\n            <a-button type=\"primary\" @click=\"addRoom\" v-if=\"userInfo.userType=='HotelManager'\"><a-icon type=\"plus\" />添加房间</a-button>\r\n        </div>\r\n\r\n        <div class=\"list\">\r\n            <a-table\r\n                :columns=\"columns\"\r\n                :dataSource=\"data\"\r\n        >\r\n                <template\r\n                        v-for=\"col in ['roomType', 'breakfast', 'total','curNum','peopleNum','price']\"\r\n                        :slot=\"col\"\r\n                        slot-scope=\"text, record\"\r\n                >\r\n                    <div :key=\"col\">\r\n\r\n                        <a-input\r\n                                v-if=\"record.editable&&col!=='roomType'&&col!=='breakfast'\"\r\n                                style=\"margin: -5px 0\"\r\n                                :value=\"text\"\r\n                                @change=\"e => handleChange(e.target.value, record.key, col)\"\r\n                        />\r\n                        <a-select v-else-if=\"record.editable&&col==='roomType'\" v-model=\"record.roomType\"  @click=\"e => handleChange(e.target.value, record.key, col)\" >\r\n                            <a-select-option value=\"BigBed\">大床房</a-select-option>\r\n                            <a-select-option value=\"DoubleBed\">双床房</a-select-option>\r\n                            <a-select-option value=\"Family\">家庭房</a-select-option>\r\n                        </a-select>\r\n                        <a-select v-else-if=\"record.editable&&col==='breakfast'\" v-model=\"record.breakfast\"  @click=\"e => handleChange(e.target.value, record.key, col)\" >\r\n                            <a-select-option value=yes>有</a-select-option>\r\n                            <a-select-option value=no>无</a-select-option>\r\n                        </a-select>\r\n                        <template v-else>\r\n                            {{ text }}\r\n                        </template>\r\n                    </div>\r\n                </template>\r\n                <template slot=\"action\" slot-scope=\"text, record\">\r\n                    <div class=\"editable-row-operations\" v-if=\"userInfo.userType=='HotelManager'\">\r\n                        <span v-if=\"record.editable\">\r\n                            <a @click=\"() => save(record.key)\">Save</a>\r\n                                <a-divider type=\"vertical\"></a-divider>\r\n                                <a-popconfirm title=\"Sure to cancel?\" @confirm=\"() => cancel(record.key)\">\r\n                                    <a>Cancel</a>\r\n                                </a-popconfirm>\r\n                        </span>\r\n                        <span v-else>\r\n                            <a :disabled=\"editingKey !== ''\" @click=\"() => edit(record.key)\">Edit</a>\r\n\r\n                            <a-divider type=\"vertical\"></a-divider>\r\n\r\n                            <a-popconfirm\r\n                                title=\"Are you sure delete this task?\"\r\n                                ok-text=\"Yes\"\r\n                                cancel-text=\"No\"\r\n                                @confirm=\"() => confirm(record)\"\r\n                                @cancel=\"cancel\"\r\n                        >\r\n                                <a href=\"#\">Delete</a>\r\n                            </a-popconfirm>\r\n                        </span>\r\n                    </div>\r\n                    <div class=\"order-row-operations\" v-if=\"userInfo.userType=='Client'\">\r\n                        <a-button type=\"primary\" @click=\"order(record)\" v-if=\"userInfo.userType=='Client'\">预定</a-button>\r\n                    </div>\r\n                </template>\r\n        </a-table>\r\n        </div>\r\n        <AddRoomModal></AddRoomModal>\r\n        <OrderModal></OrderModal>\r\n    </div>\r\n</template>\r\n<script>\r\nimport { mapGetters, mapActions, mapMutations } from 'vuex'\r\nimport OrderModal from './orderModal'\r\nimport AddRoomModal from './addRoomModal'\r\nimport hotelList from \"../hotelList\";\r\nconst columns = [\r\n    {  \r\n      title: '房型',\r\n      dataIndex: 'roomType',\r\n      key: 'roomType',\r\n        scopedSlots: { customRender: 'roomType'}\r\n    },\r\n    {\r\n      title: '早餐',\r\n      dataIndex: 'breakfast',\r\n      key: 'breakfast',\r\n        scopedSlots: { customRender: 'breakfast'}\r\n    },\r\n    {\r\n        title:'可用房间',\r\n        dataIndex: 'total',\r\n        key:'total',\r\n        scopedSlots: { customRender: 'total'}\r\n    },\r\n    {\r\n      title:'剩余房间',\r\n      dataIndex: 'curNum',\r\n      key:'curNum',\r\n    },\r\n    {\r\n      title: '入住人数',\r\n      key: 'peopleNum',\r\n      dataIndex: 'peopleNum',\r\n       scopedSlots: { customRender: 'peopleNum'}\r\n    },\r\n    {\r\n      title: '房价',\r\n      key: 'price',\r\n      dataIndex: 'price',\r\n      scopedSlots: { customRender: 'price'}\r\n    },\r\n    {\r\n      title: '操作',\r\n      key: 'action',\r\n      scopedSlots: { customRender: 'action' },\r\n    },\r\n  ];\r\nconst data = [];\r\nexport default {\r\n    name:'roomList',\r\n    props: {\r\n        rooms: {\r\n            type: Array\r\n        }\r\n    },\r\n    data() {\r\n        this.cacheData = data.map(item => ({ ...item }));\r\n        return {\r\n            data,\r\n            columns,\r\n            editingKey: '',\r\n        }\r\n    },\r\n    components: {\r\n        OrderModal,\r\n        AddRoomModal,\r\n    },\r\n    computed: {\r\n        ...mapGetters([\r\n            'orderModalVisible',\r\n            'userInfo',\r\n            'hotelList',\r\n            'currentHotelId',\r\n            'addRoomModalVisible',\r\n            'manageId',\r\n            'currentHotelInfo',\r\n            'roomList',\r\n        ])\r\n    },\r\n    async mounted() {\r\n        data.splice(0,data.length)//清空\r\n        this.set_currentHotelId(Number(this.$route.params.hotelId))\r\n        await this.getHotelRoom(this.currentHotelId)\r\n        console.log(this.roomList)\r\n        for (let i = 0; i < this.roomList.length; i++) {\r\n            data.push({\r\n                //'roomType', 'breakfast', 'peopleNum','price','action'\r\n                key: i.toString(),\r\n                id:this.roomList[i].id,\r\n                hotelId:this.roomList[i].hotelId,\r\n                roomType: this.roomList[i].roomType,\r\n                breakfast: this.roomList[i].breakfast,\r\n                total:this.roomList[i].total,\r\n                curNum:this.roomList[i].curNum,\r\n                peopleNum: this.roomList[i].peopleNum,\r\n                price: this.roomList[i].price,\r\n            });\r\n            this.cacheData.push({\r\n                //'roomType', 'breakfast', 'peopleNum','price','action'\r\n                key: i.toString(),\r\n                id:this.roomList[i].id,\r\n                hotelId:this.roomList[i].hotelId,\r\n                roomType: this.roomList[i].roomType,\r\n                breakfast: this.roomList[i].breakfast,\r\n                total:this.roomList[i].total,\r\n                curNum:this.roomList[i].curNum,\r\n                peopleNum: this.roomList[i].peopleNum,\r\n                price: this.roomList[i].price,\r\n            });\r\n        }\r\n        console.log(\"dat\")\r\n        console.log(data)\r\n        console.log(this.cacheData)\r\n    },\r\n    methods: {\r\n        ...mapMutations([\r\n            'set_orderModalVisible',\r\n            'set_currentOrderRoom',\r\n            'set_addRoomModalVisible',\r\n            'set_currentHotelId'\r\n        ]),\r\n        ...mapActions([\r\n            'getHotelList',\r\n            'deleteRoomById',\r\n            'getHotelById',\r\n            'getHotelRoom',\r\n            'changeRoom'\r\n        ]),\r\n        order(record) {\r\n\r\n            this.set_currentOrderRoom(record)\r\n            this.set_orderModalVisible(true)\r\n        },\r\n        change(record){\r\n            this.set_activeHotelId(record.id)\r\n            this.set_addRoomModalVisible(true)\r\n        },\r\n        addRoom() {\r\n            this.set_currentHotelId(Number(this.$route.params.hotelId))\r\n            this.set_addRoomModalVisible(true)\r\n        },\r\n        deleteRoom(record){\r\n            this.deleteRoomById(record.id)\r\n        },\r\n        confirm(record) {\r\n            console.log(record);\r\n            this.deleteRoom(record);\r\n        },\r\n        handleChange(value, key, column) {\r\n            const newData = [...this.data];\r\n            const target = newData.filter(item => key === item.key)[0];\r\n            if (target) {\r\n                target[column] = value;\r\n                this.data = newData;\r\n            }\r\n        },\r\n        edit(key) {\r\n            const newData = [...this.data];\r\n            const target = newData.filter(item => key === item.key)[0];\r\n            console.log(target)\r\n            this.editingKey = key;\r\n            if (target) {\r\n                target.editable = true;\r\n                this.data = newData;\r\n            }\r\n        },\r\n        save(key) {\r\n            const newData = [...this.data];\r\n            const newCacheData = [...this.cacheData];\r\n            const target = newData.filter(item => key === item.key)[0];\r\n            const targetCache = newCacheData.filter(item => key === item.key)[0];\r\n            if (target && targetCache) {\r\n                this.changeRoom(target)\r\n                delete target.editable;\r\n                this.data = newData;\r\n                Object.assign(targetCache, target);\r\n                this.cacheData = newCacheData;\r\n            }\r\n            this.editingKey = '';\r\n        },\r\n        cancel(key) {\r\n            const newData = [...this.data];\r\n            const target = newData.filter(item => key === item.key)[0];\r\n            this.editingKey = '';\r\n            if (target) {\r\n                console.log(\"temp\")\r\n                console.log(data)\r\n                console.log(this.cacheData)\r\n                Object.assign(target, this.cacheData.filter(item => key === item.key)[0]);\r\n                delete target.editable;\r\n                this.data = newData;\r\n            }\r\n        },\r\n    }\r\n}\r\n</script>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- front_end/src/views/hotel/components/roomList.vue	(revision 2eff9cb5fa9f8561c3b026fee38adbe70fd3f2ae)
++++ front_end/src/views/hotel/components/roomList.vue	(date 1593704767002)
+@@ -270,4 +270,27 @@
+         },
+     }
+ }
+-</script>
+\ No newline at end of file
++</script>
++<style scoped lang="less">
++    .hotel-info {
++        display: flex;
++        align-items: stretch;
++        justify-content: flex-start;
++    .info{
++        padding: 10px 0;
++        display: flex;
++        width: 280px;
++        flex-direction: column;
++        margin-left: 20px;
++
++    .label{
++        margin-right: 15px;
++        font-size: 18px;
++    }
++    .value {
++        margin-right: 15px
++    }
++    }
++
++    }
++</style>
+\ No newline at end of file
+Index: src/main/resources/application.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring:\r\n  datasource:\r\n     url: jdbc:mysql://localhost:3306/Hotel?serverTimezone=CTT&characterEncoding=UTF-8\r\n     username: NaCN\r\n     password: Nasiyu0627\r\n     driver-class-name: com.mysql.cj.jdbc.Driver\r\n     max-active: 200\r\n     max-idle: 20\r\n     min-idle: 10\r\n  thymeleaf:\r\n     cache: false\r\n  jackson:\r\n    time-zone: GMT+8\r\n\r\nmybatis:\r\n  mapper-locations: classpath:dataImpl/*/*Mapper.xml\r\n\r\n 
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/application.yml	(revision 2eff9cb5fa9f8561c3b026fee38adbe70fd3f2ae)
++++ src/main/resources/application.yml	(date 1593704429288)
+@@ -1,8 +1,8 @@
+ spring:
+   datasource:
+      url: jdbc:mysql://localhost:3306/Hotel?serverTimezone=CTT&characterEncoding=UTF-8
+-     username: NaCN
+-     password: Nasiyu0627
++     username: root
++     password: 54superME
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      max-active: 200
+      max-idle: 20
