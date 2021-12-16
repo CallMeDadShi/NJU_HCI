@@ -21,7 +21,7 @@ const getters = {
   orderMatchCouponList: state => state.hotel.orderMatchCouponList,
  addCommentVisible:state=>state.user.addCommentVisible,
   activeOrderId:state=>state.user.activeOrderId,
-
+    checkOrderModalVisible:state=>state.user.checkOrderModalVisible,
   //admin
     updateUsersParams:state=>state.admin.updateUsersParams,
     updateUserModalVisible:state=>state.admin.updateUserModalVisible,
