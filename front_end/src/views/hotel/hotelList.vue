@@ -6,6 +6,260 @@
         style="width: 90%; margin-bottom: 50px;"
         @search="onSearch"
     />
+
+    <div class="top-filter-container" style="padding-bottom: 30px;border: 0" >
+      <a-list item-layout="horizontal" bordered="true">
+        <a-list-item style="padding: 0">
+          <div style="background-color:#F0F2F5;width: 20%; border-right:1px solid #D9D9D9">
+            <b>位置区域</b>
+          </div>
+          <div style="background-color: white;width: 80%">
+            <a-tabs size="small" default-active-key="6" style="padding-bottom: 20px;">
+              <a-tab-pane key="1" tab="热门筛选">
+                <div>
+                  <a-checkable-tag id="t1" v-model="checkremen[0]" @change="tagClick('t1')" style="background-color: #F0F2F5">
+                    新街口
+                  </a-checkable-tag>
+                  <a-checkable-tag id="t2" v-model="checkremen[1]" @change="tagClick('t2')" style="background-color: #F0F2F5">
+                    夫子庙景区/秦淮河风光区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="t3" v-model="checkremen[2]" @change="tagClick('t3')" style="background-color: #F0F2F5">
+                    南京南站
+                  </a-checkable-tag>
+                  <a-checkable-tag id="t4" v-model="checkremen[3]" @change="tagClick('t4')" style="background-color: #F0F2F5">
+                    汤山风景区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="t5" v-model="checkremen[4]" @change="tagClick('t5')" style="background-color: #F0F2F5">
+                    江宁区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="t6" v-model="checkremen[5]" @change="tagClick('t6')" style="background-color: #F0F2F5">
+                    禄口国际机场
+                  </a-checkable-tag>
+                  <a-checkable-tag id="t7" v-model="checkremen[6]" @change="tagClick('t7')" style="background-color: #F0F2F5">
+                    南京大学（鼓楼校区）
+                  </a-checkable-tag>
+                  <a-checkable-tag id="t8" v-model="checkremen[7]" @change="tagClick('t8')" style="background-color: #F0F2F5">
+                    玄武湖
+                  </a-checkable-tag>
+                </div>
+              </a-tab-pane>
+              <a-tab-pane key="2" tab="商业区">
+                <a-checkable-tag id="sy1" v-model="checksy[0]" @change="tagClick('sy1')" style="background-color: #F0F2F5">
+                  新街口
+                </a-checkable-tag>
+                <a-checkable-tag id="sy2" v-model="checksy[1]" @change="tagClick('sy2')" style="background-color: #F0F2F5">
+                  汤山风景区
+                </a-checkable-tag>
+                <a-checkable-tag id="sy3" v-model="checksy[2]" @change="tagClick('sy3')" style="background-color: #F0F2F5">
+                  玄武湖
+                </a-checkable-tag>
+                <a-checkable-tag id="sy4" v-model="checksy[3]" @change="tagClick('sy4')" style="background-color: #F0F2F5">
+                  江宁开发区
+                </a-checkable-tag>
+                <a-checkable-tag id="sy5" v-model="checksy[4]" @change="tagClick('sy5')" style="background-color: #F0F2F5">
+                  徐庄软件园
+                </a-checkable-tag>
+                <a-checkable-tag id="sy6" v-model="checksy[5]" @change="tagClick('sy6')" style="background-color: #F0F2F5">
+                  奥体中心
+                </a-checkable-tag>
+              </a-tab-pane>
+              <a-tab-pane key="3" tab="机场车站">
+                <div>
+                  <a-checkable-tag id="jcdt1" v-model="checkjcdt[0]" @change="tagClick('jcdt1')" style="background-color: #F0F2F5">
+                    南京南站
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jcdt2" v-model="checkjcdt[1]" @change="tagClick('jcdt2')" style="background-color: #F0F2F5">
+                    禄口国际机场
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jcdt3" v-model="checkjcdt[2]" @change="tagClick('jcdt3')" style="background-color: #F0F2F5">
+                    南京火车站
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jcdt4" v-model="checkjcdt[3]" @change="tagClick('jcdt4')" style="background-color: #F0F2F5">
+                    溧水站
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jcdt5" v-model="checkjcdt[4]" @change="tagClick('jcdt5')" style="background-color: #F0F2F5">
+                    江宁站
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jcdt6" v-model="checkjcdt[5]" @change="tagClick('jcdt6')" style="background-color: #F0F2F5">
+                    仙林高铁站
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jcdt7" v-model="checkjcdt[6]" @change="tagClick('jcdt7')" style="background-color: #F0F2F5">
+                    栖霞山站
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jcdt8" v-model="checkjcdt[7]" @change="tagClick('jcdt8')" style="background-color: #F0F2F5">
+                    西善桥站
+                  </a-checkable-tag>
+                </div>
+              </a-tab-pane>
+              <a-tab-pane key="5" tab="行政区">
+                <div>
+                  <a-checkable-tag id="xz1" v-model="checkxz[0]" @change="tagClick('xz1')" style="background-color: #F0F2F5">
+                    六合区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz2" v-model="checkxz[1]" @change="tagClick('xz2')" style="background-color: #F0F2F5">
+                    建邺区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz3" v-model="checkxz[2]" @change="tagClick('xz3')" style="background-color: #F0F2F5">
+                    栖霞区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz4" v-model="checkxz[3]" @change="tagClick('xz4')" style="background-color: #F0F2F5">
+                    江宁区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz5" v-model="checkxz[4]" @change="tagClick('xz5')" style="background-color: #F0F2F5">
+                    浦口区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz6" v-model="checkxz[5]" @change="tagClick('xz6')" style="background-color: #F0F2F5">
+                    溧水区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz7" v-model="checkxz[6]" @change="tagClick('xz7')" style="background-color: #F0F2F5">
+                    玄武区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz8" v-model="checkxz[7]" @change="tagClick('xz8')" style="background-color: #F0F2F5">
+                    秦淮区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz9" v-model="checkxz[8]" @change="tagClick('xz9')" style="background-color: #F0F2F5">
+                    雨花台区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz10" v-model="checkxz[9]" @change="tagClick('xz10')" style="background-color: #F0F2F5">
+                    高淳区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz11" v-model="checkxz[10]" @change="tagClick('xz11')" style="background-color: #F0F2F5">
+                    秦淮河
+                  </a-checkable-tag>
+                  <a-checkable-tag id="xz12" v-model="checkxz[11]" @change="tagClick('xz12')" style="background-color: #F0F2F5">
+                    鼓楼区
+                  </a-checkable-tag>
+                </div>
+              </a-tab-pane>
+              <a-tab-pane key="6" tab="景点">
+                <div>
+                  <a-checkable-tag id="jd1" v-model="checkjd[0]" @change="tagClick('jd1')" style="background-color: #F0F2F5">
+                    新街口
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd2" v-model="checkjd[1]" @change="tagClick('jd2')" style="background-color: #F0F2F5">
+                    汤山风景区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd3" v-model="checkjd[2]" @change="tagClick('jd3')" style="background-color: #F0F2F5">
+                    玄武湖
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd4" v-model="checkjd[3]" @change="tagClick('jd4')" style="background-color: #F0F2F5">
+                    中山陵景区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd5" v-model="checkjd[4]" @change="tagClick('jd5')" style="background-color: #F0F2F5">
+                    栖霞山
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd6" v-model="checkjd[5]" @change="tagClick('jd6')" style="background-color: #F0F2F5">
+                    南京总统府
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd7" v-model="checkjd[6]" @change="tagClick('jd7')" style="background-color: #F0F2F5">
+                    钟山风景名胜区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd8" v-model="checkjd[7]" @change="tagClick('jd8')" style="background-color: #F0F2F5">
+                    老东门历史街区
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd9" v-model="checkjd[8]" @change="tagClick('jd9')" style="background-color: #F0F2F5">
+                    夫子庙
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd10" v-model="checkjd[9]" @change="tagClick('jd10')" style="background-color: #F0F2F5">
+                    南京博物馆
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd11" v-model="checkjd[10]" @change="tagClick('jd11')" style="background-color: #F0F2F5">
+                    秦淮河
+                  </a-checkable-tag>
+                  <a-checkable-tag id="jd12" v-model="checkjd[11]" @change="tagClick('jd12')" style="background-color: #F0F2F5">
+                    牛首山景区
+                  </a-checkable-tag>
+                </div>
+              </a-tab-pane>
+            </a-tabs>
+          </div>
+        </a-list-item>
+        <a-list-item style="padding: 0">
+          <div style="background-color:#F0F2F5;width: 20%; border-right:1px solid #D9D9D9">
+            <b>星级价格</b>
+          </div>
+          <div style="background-color: white;width: 80%">
+            <div style="padding-bottom: 20px;padding-top: 20px;">
+              <a-checkable-tag id="xj1" v-model="checkxj[0]" @change="tagClick('xj1')" style="background-color: #F0F2F5">
+                五星(钻)级
+              </a-checkable-tag>
+              <a-checkable-tag id="xj2" v-model="checkxj[1]" @change="tagClick('xj2')" style="background-color: #F0F2F5">
+                四星(钻)级
+              </a-checkable-tag>
+              <a-checkable-tag id="xj3" v-model="checkxj[2]" @change="tagClick('xj3')" style="background-color: #F0F2F5">
+                三星(钻)级
+              </a-checkable-tag>
+              <a-checkable-tag id="xj4" v-model="checkxj[3]" @change="tagClick('xj4')" style="background-color: #F0F2F5">
+                150以下
+              </a-checkable-tag>
+              <a-checkable-tag id="xj5" v-model="checkxj[4]" @change="tagClick('xj5')" style="background-color: #F0F2F5">
+                150-300
+              </a-checkable-tag>
+              <a-checkable-tag id="xj6" v-model="checkxj[5]" @change="tagClick('xj6')" style="background-color: #F0F2F5">
+                300-450
+              </a-checkable-tag>
+              <a-checkable-tag id="xj7" v-model="checkxj[6]" @change="tagClick('xj7')" style="background-color: #F0F2F5">
+                450-600
+              </a-checkable-tag>
+              <a-checkable-tag id="xj8" v-model="checkxj[7]" @change="tagClick('xj8')" style="background-color: #F0F2F5">
+                600以上
+              </a-checkable-tag>
+            </div>
+          </div>
+        </a-list-item>
+        <a-list-item style="padding: 0">
+          <div style="background-color:#F0F2F5;width: 20%; border-right:1px solid #D9D9D9">
+            <b>高级筛选</b>
+          </div>
+          <div style="background-color: white;width: 80%;display: flex;flex-direction: column">
+            <div>
+              <p>评分</p>
+              <a-icon type="down" />
+            </div>
+            <div>
+              <p>点评数量</p>
+              <a-icon type="down" />
+            </div>
+            <div>
+              <p>早餐</p>
+              <a-icon type="down" />
+            </div>
+            <div>
+              <p>支付方式</p>
+              <a-icon type="down" />
+            </div>
+            <div>
+              <p>房型</p>
+              <a-icon type="down" />
+            </div>
+            <div>
+              <p>酒店设施</p>
+              <a-icon type="down" />
+            </div>
+            <div>
+              <p>优惠促销</p>
+              <a-icon type="down" />
+            </div>
+            <div>
+              <p>酒店类型</p>
+              <a-icon type="down" />
+            </div>
+            <div>
+              <p>特色主题</p>
+              <a-icon type="down" />
+            </div>
+            <div>
+              <p>品牌</p>
+              <a-icon type="down" />
+            </div>
+
+
+          </div>
+        </a-list-item>
+      </a-list>
+    </div>
+
+
     <div>
       <transition
           enter-active-class="animate__animated animate__fadeIn"
@@ -120,6 +374,12 @@ export default {
   },
   data(){
     return{
+      checkremen:[false,false,false,false,false,false,false,false],
+      checksy:[false,false,false,false,false,false,false],
+      checkjcdt:[false,false,false,false,false,false,false],
+      checkjd:[false,false,false,false,false,false,false,false,false,false,false,false],
+      checkxz:[false,false,false,false,false,false,false,false,false,false,false,false],
+      checkxj:[false,false,false,false,false,false,false,false],
       emptyBox: [{ name: 'box1' }, { name: 'box2'}, {name: 'box3'}],
       showFixedSearch: false,
       value_low_rate:1,
@@ -168,6 +428,14 @@ export default {
         'getHotelUrlList',
       'getHotelMatch',
     ]),
+    tagClick(id){
+      const elem=document.getElementById(id)
+      console.log(elem.style.backgroundColor)
+      if (elem.style.backgroundColor==='rgb(240, 242, 245)')
+        elem.style.backgroundColor="rgb(51, 125, 250)"
+      else
+        elem.style.backgroundColor='rgb(240, 242, 245)'
+    },
     showSearch() {
       // 获取当前滚动条向下滚动的距离
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
