@@ -211,49 +211,225 @@
           <div style="background-color:#F0F2F5;width: 20%; border-right:1px solid #D9D9D9">
             <b>高级筛选</b>
           </div>
-          <div style="background-color: white;width: 80%;display: flex;flex-direction: column">
-            <div>
-              <p>评分</p>
-              <a-icon type="down" />
-            </div>
-            <div>
-              <p>点评数量</p>
-              <a-icon type="down" />
-            </div>
-            <div>
-              <p>早餐</p>
-              <a-icon type="down" />
-            </div>
-            <div>
-              <p>支付方式</p>
-              <a-icon type="down" />
-            </div>
-            <div>
-              <p>房型</p>
-              <a-icon type="down" />
-            </div>
-            <div>
-              <p>酒店设施</p>
-              <a-icon type="down" />
-            </div>
-            <div>
-              <p>优惠促销</p>
-              <a-icon type="down" />
-            </div>
-            <div>
-              <p>酒店类型</p>
-              <a-icon type="down" />
-            </div>
-            <div>
-              <p>特色主题</p>
-              <a-icon type="down" />
-            </div>
-            <div>
-              <p>品牌</p>
-              <a-icon type="down" />
-            </div>
+          <div class="high-level-select-container" style="display: flex;flex-direction: column;width: 80%">
+            <div class="folder-high-level-select" style="background-color: white;display: flex;flex-direction: row;padding-top: 20px;padding-right: 5px">
+              <div style="width: 10%;">
+                <p>评分
+                  <a-icon type="down" v-if="fold!=='pf'" @click="unfold('pf')"/>
+                  <a-icon type="up" v-if="fold=='pf'" @click="unfold('none')"/>
+                </p>
+              </div>
+              <div style="width: 10%">
+                <p>点评数量
+                  <a-icon type="down" v-if="fold!=='dp'" @click="unfold('dp')"/>
+                  <a-icon type="up" v-if="fold=='dp'" @click="unfold('none')"/>
+                </p>
+              </div>
+              <div style="width: 10%">
+                <p>早餐
+                  <a-icon type="down" v-if="fold!=='zc'" @click="unfold('zc')"/>
+                  <a-icon type="up" v-if="fold=='zc'" @click="unfold('none')"/>
+                </p>
+              </div>
+              <div style="width: 10%">
+                <p>支付方式
+                  <a-icon type="down" v-if="fold!=='zf'" @click="unfold('zf')"/>
+                  <a-icon type="up" v-if="fold=='zf'" @click="unfold('none')"/>
+                </p>
+              </div>
+              <div style="width: 10%">
+                <p>房型
+                  <a-icon type="down" v-if="fold!=='fx'" @click="unfold('fx')"/>
+                  <a-icon type="up" v-if="fold=='fx'" @click="unfold('none')"/>
+                </p>
+              </div>
+              <div style="width: 10%">
+                <p>酒店设施
+                  <a-icon type="down" v-if="fold!=='ss'" @click="unfold('ss')"/>
+                  <a-icon type="up" v-if="fold=='ss'" @click="unfold('none')"/>
+                </p>
+              </div>
+              <div style="width: 10%">
+                <p>优惠促销
+                  <a-icon type="down" v-if="fold!=='yh'" @click="unfold('yh')"/>
+                  <a-icon type="up" v-if="fold=='yh'" @click="unfold('none')"/>
+                </p>
+              </div>
+              <div style="width: 10%">
+                <p>酒店类型
+                  <a-icon type="down" v-if="fold!=='lx'" @click="unfold('lx')"/>
+                  <a-icon type="up" v-if="fold=='lx'" @click="unfold('none')"/>
+                </p>
+              </div>
+              <div style="width: 10%">
+                <p>特色主题
+                  <a-icon type="down" v-if="fold!=='zt'" @click="unfold('zt')"/>
+                  <a-icon type="up" v-if="fold=='zt'" @click="unfold('none')"/>
+                </p>
+              </div>
+              <div style="width: 10%">
+                <p>品牌
+                  <a-icon type="down" v-if="fold!=='pp'" @click="unfold('pp')"/>
+                  <a-icon type="up" v-if="fold=='pp'" @click="unfold('none')"/>
+                </p>
+              </div>
 
 
+            </div>
+            <div class="tags-high-level-select" style="background-color: white;display: flex;flex-direction: row;padding-bottom: 20px">
+              <div class="tas-pf" style="padding-left: 30px" v-if="fold=='pf'">
+                <a-checkable-tag id="pf1" v-model="checkpf[0]" @change="tagClick('pf1')" style="background-color: #F0F2F5">
+                  4.8分以上
+                </a-checkable-tag>
+                <a-checkable-tag id="pf2" v-model="checkpf[1]" @change="tagClick('pf2')" style="background-color: #F0F2F5">
+                  4.5分以上
+                </a-checkable-tag>
+                <a-checkable-tag id="pf3" v-model="checkpf[2]" @change="tagClick('pf3')" style="background-color: #F0F2F5">
+                  4.0分以上
+                </a-checkable-tag>
+                <a-checkable-tag id="pf4" v-model="checkpf[3]" @change="tagClick('pf4')" style="background-color: #F0F2F5">
+                  3.5分以上
+                </a-checkable-tag>
+              </div>
+              <div class="tas-dp" style="padding-left: 30px" v-if="fold=='dp'">
+                <a-checkable-tag id="dp1" v-model="checkdp[0]" @change="tagClick('dp1')" style="background-color: #F0F2F5">
+                  500条以上
+                </a-checkable-tag>
+                <a-checkable-tag id="dp2" v-model="checkdp[1]" @change="tagClick('dp2')" style="background-color: #F0F2F5">
+                  200条以上
+                </a-checkable-tag>
+                <a-checkable-tag id="dp3" v-model="checkdp[2]" @change="tagClick('dp3')" style="background-color: #F0F2F5">
+                  100条以上
+                </a-checkable-tag>
+                <a-checkable-tag id="dp4" v-model="checkdp[3]" @change="tagClick('dp4')" style="background-color: #F0F2F5">
+                  50条以上
+                </a-checkable-tag>
+              </div>
+              <div class="tas-zc" style="padding-left: 30px" v-if="fold=='zc'">
+                <a-checkable-tag id="zc1" v-model="checkzc[0]" @change="tagClick('zc1')" style="background-color: #F0F2F5">
+                  含早餐
+                </a-checkable-tag>
+                <a-checkable-tag id="zc2" v-model="checkzc[1]" @change="tagClick('zc2')" style="background-color: #F0F2F5">
+                  单份早餐
+                </a-checkable-tag>
+                <a-checkable-tag id="zc3" v-model="checkzc[2]" @change="tagClick('zc3')" style="background-color: #F0F2F5">
+                  双份早餐
+                </a-checkable-tag>
+              </div>
+              <div class="tas-zf" style="padding-left: 30px" v-if="fold=='zf'">
+                <a-checkable-tag id="zf1" v-model="checkzf[0]" @change="tagClick('zf1')" style="background-color: #F0F2F5">
+                  在线付款
+                </a-checkable-tag>
+                <a-checkable-tag id="zf2" v-model="checkzf[1]" @change="tagClick('zf2')" style="background-color: #F0F2F5">
+                  到店付款
+                </a-checkable-tag>
+                <a-checkable-tag id="zf3" v-model="checkzf[2]" @change="tagClick('zf3')" style="background-color: #F0F2F5">
+                  闪住
+                </a-checkable-tag>
+              </div>
+              <div class="tas-fx" style="padding-left: 30px" v-if="fold=='fx'">
+                <a-checkable-tag id="fx1" v-model="checkfx[0]" @change="tagClick('fx1')" style="background-color: #F0F2F5">
+                  大床房
+                </a-checkable-tag>
+                <a-checkable-tag id="fx2" v-model="checkfx[1]" @change="tagClick('fx2')" style="background-color: #F0F2F5">
+                  双床房
+                </a-checkable-tag>
+                <a-checkable-tag id="fx3" v-model="checkfx[2]" @change="tagClick('fx3')" style="background-color: #F0F2F5">
+                  多床房
+                </a-checkable-tag>
+                <a-checkable-tag id="fx4" v-model="checkfx[3]" @change="tagClick('fx4')" style="background-color: #F0F2F5">
+                  单人床房
+                </a-checkable-tag>
+              </div>
+              <div class="tas-ss" style="padding-left: 30px" v-if="fold=='ss'">
+                <a-checkable-tag id="ss1" v-model="checkss[0]" @change="tagClick('ss1')" style="background-color: #F0F2F5">
+                  免费停车
+                </a-checkable-tag>
+                <a-checkable-tag id="ss2" v-model="checkss[1]" @change="tagClick('ss2')" style="background-color: #F0F2F5">
+                  新开业/新装修
+                </a-checkable-tag>
+                <a-checkable-tag id="ss3" v-model="checkss[2]" @change="tagClick('ss3')" style="background-color: #F0F2F5">
+                  允许携带宠物
+                </a-checkable-tag>
+                <a-checkable-tag id="ss4" v-model="checkss[3]" @change="tagClick('ss4')" style="background-color: #F0F2F5">
+                  停车场
+                </a-checkable-tag>
+                <a-checkable-tag id="ss5" v-model="checkss[4]" @change="tagClick('ss5')" style="background-color: #F0F2F5">
+                  室内游泳
+                </a-checkable-tag>
+                <a-checkable-tag id="ss6" v-model="checkss[5]" @change="tagClick('ss6')" style="background-color: #F0F2F5">
+                  接送服务
+                </a-checkable-tag>
+                <a-checkable-tag id="ss7" v-model="checkss[6]" @change="tagClick('ss7')" style="background-color: #F0F2F5">
+                  健身房
+                </a-checkable-tag>
+                <a-checkable-tag id="ss8" v-model="checkss[7]" @change="tagClick('ss8')" style="background-color: #F0F2F5">
+                  会议设施
+                </a-checkable-tag>
+              </div>
+              <div class="tas-yh" style="padding-left: 30px" v-if="fold=='yh'">
+                <a-checkable-tag id="yh1" v-model="checkyh[0]" @change="tagClick('yh1')" style="background-color: #F0F2F5">
+                  十亿豪补
+                </a-checkable-tag>
+                <a-checkable-tag id="yh2" v-model="checkyh[1]" @change="tagClick('yh2')" style="background-color: #F0F2F5">
+                  今夜甩卖
+                </a-checkable-tag>
+                <a-checkable-tag id="yh3" v-model="checkyh[2]" @change="tagClick('yh3')" style="background-color: #F0F2F5">
+                  超级周末
+                </a-checkable-tag>
+                <a-checkable-tag id="yh4" v-model="checkyh[3]" @change="tagClick('yh4')" style="background-color: #F0F2F5">
+                  门店首单
+                </a-checkable-tag>
+                <a-checkable-tag id="yh5" v-model="checkyh[4]" @change="tagClick('yh5')" style="background-color: #F0F2F5">
+                  限时抢购
+                </a-checkable-tag>
+              </div>
+              <div class="tas-lx" style="padding-left: 30px" v-if="fold=='lx'">
+                <a-checkable-tag id="lx1" v-model="checklx[0]" @change="tagClick('lx1')" style="background-color: #F0F2F5">
+                  民宿
+                </a-checkable-tag>
+                <a-checkable-tag id="lx2" v-model="checklx[1]" @change="tagClick('lx2')" style="background-color: #F0F2F5">
+                  酒店
+                </a-checkable-tag>
+                <a-checkable-tag id="lx3" v-model="checklx[2]" @change="tagClick('lx3')" style="background-color: #F0F2F5">
+                  青年旅舍
+                </a-checkable-tag>
+                <a-checkable-tag id="lx4" v-model="checklx[3]" @change="tagClick('lx4')" style="background-color: #F0F2F5">
+                  别墅
+                </a-checkable-tag>
+                <a-checkable-tag id="lx5" v-model="checklx[4]" @change="tagClick('lx5')" style="background-color: #F0F2F5">
+                  特色住宿
+                </a-checkable-tag>
+              </div>
+              <div class="tas-zt" style="padding-left: 30px" v-if="fold=='zt'">
+                <a-checkable-tag id="zt1" v-model="checkzt[0]" @change="tagClick('zt1')" style="background-color: #F0F2F5">
+                  浪漫情侣
+                </a-checkable-tag>
+                <a-checkable-tag id="zt2" v-model="checkzt[1]" @change="tagClick('zt2')" style="background-color: #F0F2F5">
+                  温泉汤池
+                </a-checkable-tag>
+                <a-checkable-tag id="zt3" v-model="checkzt[2]" @change="tagClick('zt3')" style="background-color: #F0F2F5">
+                  电竞酒店
+                </a-checkable-tag>
+                <a-checkable-tag id="zt4" v-model="checkzt[3]" @change="tagClick('zt4')" style="background-color: #F0F2F5">
+                  网红美宿
+                </a-checkable-tag>
+                <a-checkable-tag id="zt5" v-model="checkzt[4]" @change="tagClick('zt5')" style="background-color: #F0F2F5">
+                  亲子酒店
+                </a-checkable-tag>
+              </div>
+              <div class="tas-pp" style="padding-left: 30px" v-if="fold=='pp'">
+                <a-checkable-tag id="pp1" v-model="checkpp[0]" @change="tagClick('pp1')" style="background-color: #F0F2F5">
+                  希尔顿
+                </a-checkable-tag>
+                <a-checkable-tag id="pp2" v-model="checkpp[1]" @change="tagClick('pp2')" style="background-color: #F0F2F5">
+                  YUNIK
+                </a-checkable-tag>
+                <a-checkable-tag id="pp3" v-model="checkpp[2]" @change="tagClick('pp3')" style="background-color: #F0F2F5">
+                  城市名人
+                </a-checkable-tag>
+              </div>
+            </div>
           </div>
         </a-list-item>
       </a-list>
@@ -336,9 +512,9 @@
               <div class="temp">
                   <coupon-active :file-list1="fileList"></coupon-active></div>
               <div style="width: 100%;">
-                  <div style="width: 100%; text-align: right; margin:20px 0">
-                      <select-menu style=" margin-right: 50px"  >详细搜索</select-menu>
-                  </div>
+<!--                  <div style="width: 100%; text-align: right; margin:20px 0">-->
+<!--                      <select-menu style=" margin-right: 50px"  >详细搜索</select-menu>-->
+<!--                  </div>-->
 
               </div>
             <div class="card-wrapper">
@@ -367,14 +543,26 @@ import { SearchOutlined,DownOutlined } from '@ant-design/icons-vue';
 export default {
   name: 'home',
   components: {
-      SelectMenu,
+      // SelectMenu,
       CouponActive,
       // Coupon,
     HotelCard
   },
   data(){
     return{
+      fold:"none",
+      exfold:"none",
+      checkpf:[false,false,false,false],
+      checkzc:[false,false,false],
+      checkzf:[false,false,false],
+      checkpp:[false,false,false],
+      checkdp:[false,false,false,false],
+      checkfx:[false,false,false,false],
+      checkyh:[false,false,false,false,false],
+      checklx:[false,false,false,false,false],
+      checkzt:[false,false,false,false,false],
       checkremen:[false,false,false,false,false,false,false,false],
+      checkss:[false,false,false,false,false,false,false,false],
       checksy:[false,false,false,false,false,false,false],
       checkjcdt:[false,false,false,false,false,false,false],
       checkjd:[false,false,false,false,false,false,false,false,false,false,false,false],
@@ -428,13 +616,29 @@ export default {
         'getHotelUrlList',
       'getHotelMatch',
     ]),
+
+    unfold(id){
+      this.fold=id;
+    },
     tagClick(id){
+      console.log("?????" +
+          "")
       const elem=document.getElementById(id)
       console.log(elem.style.backgroundColor)
       if (elem.style.backgroundColor==='rgb(240, 242, 245)')
         elem.style.backgroundColor="rgb(51, 125, 250)"
       else
         elem.style.backgroundColor='rgb(240, 242, 245)'
+      const randomName=["汉庭","儒家","桂圆","宜居"]
+
+      const data = {
+        name: randomName[Math.floor((Math.random()*4))],
+        address: this.hotel_address,
+        rate:[0,5],
+        money:[this.money1,this.money2],
+        hotelStar:[this.value_low_rate,this.value_high_rate]
+      }
+      this.getHotelMatch(data)
     },
     showSearch() {
       // 获取当前滚动条向下滚动的距离
