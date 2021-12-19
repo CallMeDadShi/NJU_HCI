@@ -6,7 +6,7 @@
           {{ currentHotelInfo.title }}
         </h1>
         <div class="hotel-info">
-          <a-card style="width: 300px;">
+          <a-card class="hotel_img" style="width: 500px;" >
             <img
                 alt="example"
                 :src="image_url"
@@ -14,8 +14,9 @@
                 referrerPolicy="no-referrer"
             />
           </a-card>
-          <div class="info">
-            <a-form :form="form" style="margin-top: 10px">
+
+          <div class="info" >
+            <a-form :form="form" style="margin-top: 10px;">
               <a-form-item label="酒店名称" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3  }">
                 <a-input
                     placeholder="请填写酒店名称"
@@ -55,7 +56,7 @@
                     v-decorator="['description', { rules: [{ required: true, message: '请输入酒店简介' }] }]"
                     v-if="modify"
                 />
-                <span v-else>{{ currentHotelInfo.description }}</span>
+                <span v-else >{{ currentHotelInfo.description }}</span>
               </a-form-item>
               <a-form-item :wrapper-col="{ span: 12, offset: 5 }" v-if="modify">
                 <a-button type="primary" @click="saveModify">
@@ -87,7 +88,7 @@
             </div>
 
           </div>
-          <div class="amap-wrapper">
+          <div class="amap-wrapper" style="margin-top: 50px">
             <el-amap class="amap-box" :vid="'amap-vue'"></el-amap>
           </div>
         </div>
@@ -95,7 +96,7 @@
         <a-divider></a-divider>
         <a-tabs>
           <a-tab-pane tab="房间信息" key="1">
-            <div style="width: 100%; text-align: right; margin:20px 0">
+            <div style="width: 100%; text-align: left; margin:20px 0">
               <a-range-picker v-if="userInfo.userType=='Client'" @change="onChange"/>
             </div>
             <a-alert
@@ -237,7 +238,11 @@ const columns = [
   },
 ];
 
-
+const cards=[
+  { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
+  { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6 },
+  { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 },
+];
 
 import {AMapManager, lazyAMapApiLoaderInstance} from 'vue-amap'
 let amapManager = new AMapManager()
@@ -255,6 +260,7 @@ export default {
   data() {
     return {
       flag: true,
+      cards,
       columns,
       timeList,
       temp: [],
@@ -397,11 +403,14 @@ export default {
 .hotelDetailCard {
   padding: 50px 50px;
 }
-
+.hotel_img{
+  width: 100%;
+  margin:auto;
+}
 .amap-wrapper {
-  margin-left: 200px;
-  width: 500px;
-  height: 500px;
+  margin-left: 150px;
+  width: 400px;
+  height: 400px;
 }
 
 .hotel-info {
@@ -418,11 +427,11 @@ export default {
 
     .label {
       margin-right: 15px;
-      font-size: 18px;
+      font-size: 30px;
     }
 
     .value {
-      margin-right: 15px
+      margin-right: 15px;
     }
   }
 
@@ -430,7 +439,7 @@ export default {
 
 .hotel-detail {
   margin-left: 50px;
-  font-size: 30px;
+  font-size: 40px;
   font-family: Avenir, 'WenQuanYi Micro Hei', Arial, Helvetica, sans-serif;
 }
 </style>

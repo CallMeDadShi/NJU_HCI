@@ -3,24 +3,24 @@
     <a-tabs>
       <a-tab-pane tab="我的信息" key="1">
         <a-form :form="form" style="margin-top: 30px">
-          <a-form-item label="头像" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
-            <a-avatar
-                shape="square"
-                size="large"
-                :style="{ backgroundColor: color, verticalAlign: 'middle' }"
-            >
-              {{ avatarValue }}
-            </a-avatar>
-            <a-divider type="vertical"></a-divider>
-            <a-button
-                size="small"
-                :style="{ marginLeft: 16, verticalAlign: 'middle' }"
-                @click="changeValue"
-                v-if="modify"
-            >
-              改变
-            </a-button>
-          </a-form-item>
+<!--          <a-form-item label="头像" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">-->
+<!--            <a-avatar-->
+<!--                shape="square"-->
+<!--                size="large"-->
+<!--                :style="{ backgroundColor: color, verticalAlign: 'middle' }"-->
+<!--            >-->
+<!--              {{ avatarValue }}-->
+<!--            </a-avatar>-->
+<!--            <a-divider type="vertical"></a-divider>-->
+<!--            <a-button-->
+<!--                size="small"-->
+<!--                :style="{ marginLeft: 16, verticalAlign: 'middle' }"-->
+<!--                @click="changeValue"-->
+<!--                v-if="modify"-->
+<!--            >-->
+<!--              改变-->
+<!--            </a-button>-->
+<!--          </a-form-item>-->
           <a-form-item label="用户名" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1  }">
             <a-input
                 placeholder="请填写用户名"
@@ -169,9 +169,7 @@
                 :loading="loginLoading"
                 @click="handlelogin()"
             >确定</a-button>
-            <v-btn
-              elevation="2"
-          > 学习</v-btn>
+
           </a-form-item>
         </div>
       </a-tab-pane>
