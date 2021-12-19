@@ -441,7 +441,7 @@
           enter-active-class="animate__animated animate__fadeIn"
           leave-active-class="animate__animated animate__fadeOut"
       >
-        <div class="fixedSearch" v-show="showFixedSearch">
+        <div class="fixedSearch" v-show="showFixedSearch" style="padding-top: 30px;padding-bottom: 30px">
           <a-input-group size="large">
           <a-row :gutter="10">
             <a-col :span="4">
