@@ -130,6 +130,16 @@
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
+          <!-- 验证码 -->
+          <a-form-item >
+            <a-input v-model="vertify_code" placeholder="验证码" prefix-icon="a-icon-key">
+            </a-input>
+            <template slot="append">
+            </template>
+              <div class="login-code" @click="refreshCode" title="看不清？点击切换">
+                <vertify-code :identifyCode="identifyCode"></vertify-code>
+              </div>
+          </a-form-item>
            <a-form-item style="margin-top:24px">
             <a-button
               size="large"
@@ -148,10 +158,12 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex'
+import VertifyCode from "@/components/VertifyCode";
 
 export default {
   name: 'login',
   components: {
+    VertifyCode
     
   },
   data () {
@@ -160,6 +172,9 @@ export default {
       loginLoading: false,
       registerLoading: false,
       form: this.$form.createForm(this),
+      identifyCodes: 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz0123456789',
+      identifyCode: '',
+      vertify_code: '',
     }
   },
   computed: {
@@ -168,7 +183,8 @@ export default {
     ])
   },
   mounted() {
-
+      this.identifyCode = ''
+      this.makeCode(this.identifyCodes, 4)
   },
   watch: {
     $route: {
@@ -265,7 +281,35 @@ export default {
           this.registerLoading = false
         }
       });
+    },
+    randomNum (min, max) {
+      return Math.floor(Math.random() * (max - min) + min)
+    },
+    // 生成随机验证码
+    makeCode (o, l) {
+      for (let i = 0; i < l; i++) {
+        this.identifyCode += this.identifyCodes[
+            this.randomNum(0, this.identifyCodes.length)
+            ]
+      }
+      // console.log('identifyCode: ' + this.identifyCode)
+    },
+    // 验证码刷新
+    refreshCode () {
+      this.identifyCode = ''
+      this.makeCode(this.identifyCodes, 4)
+    },
+    // 验证码输入校验
+    validateCode (rule, value, callback) {
+      if (value !== this.identifyCode) {
+        callback(new Error('验证码验证错误！请输入正确的验证码！'))
+      } else {
+        callback()
+      }
     }
+  },
+  created () {
+    this.refreshCode()
   }
 }
 </script>
@@ -274,7 +318,7 @@ export default {
 
 .main{
     min-width: 260px;
-    width: 368px;
+    width: 450px;
     margin: 100px auto;
     .top {
         text-align: center;
@@ -370,4 +414,9 @@ export default {
     }
   }
 }
+.login-code {
+  cursor: pointer;
+  margin: 0;
+}
+
 </style>
