@@ -39,6 +39,7 @@ const user = {
             hotelid:-1,
             corporationName:""
         },
+        checkOrderModalVisible:false,
         enrollVIPVisible:false,
         userOrderList: [],
         historyOrderList:[],
@@ -55,6 +56,20 @@ const user = {
             hotelId:-1,
             color:"",
 
+        },
+        checkOrderParmas:{
+            hotelId: '',
+            hotelName: '',
+            userId: -1,
+            checkInDate: '',
+            checkOutDate: '',
+            roomType: '',
+            roomNum: '',
+            peopleNum: '',
+            haveChild: '',
+            createDate: '',
+            price:'',
+            orderState:'',
         }
 
     },
@@ -82,6 +97,9 @@ const user = {
             state.addCommentVisible=data
 
         },
+        set_checkOrderModalVisible: function (state,data) {
+            state.checkOrderModalVisible=data
+        },
         set_commentVisible:(state,data)=>{
             state.commentVisible=data
         },
@@ -108,6 +126,12 @@ const user = {
                  ...state.commentParams,
                  ...data
              }
+        },
+        set_checkOrderParams:(state,data)=>{
+            state.checkOrderParmas={
+                ...state.checkOrderParmas,
+                ...data,
+            }
         },
     },
 

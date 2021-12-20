@@ -25,7 +25,7 @@
 
                 <a-form-item label="酒店星级" v-bind="formItemLayout">
 
-                     最低星级<a-rate v-model="hotelStarNum1"  />
+                     最低星级:<a-rate v-model="hotelStarNum1"  />
                     <br/>
                     最高星级:<a-rate v-model="hotelStarNum2"  />
                 </a-form-item>
