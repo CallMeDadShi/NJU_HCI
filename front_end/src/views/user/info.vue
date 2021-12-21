@@ -1,26 +1,26 @@
 <template>
   <div class="info-wrapper">
-    <a-tabs>
+    <a-tabs :activeKey="activeKey" @change="changeKey" tabPosition="left">
       <a-tab-pane tab="我的信息" key="1">
         <a-form :form="form" style="margin-top: 30px">
-<!--          <a-form-item label="头像" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">-->
-<!--            <a-avatar-->
-<!--                shape="square"-->
-<!--                size="large"-->
-<!--                :style="{ backgroundColor: color, verticalAlign: 'middle' }"-->
-<!--            >-->
-<!--              {{ avatarValue }}-->
-<!--            </a-avatar>-->
-<!--            <a-divider type="vertical"></a-divider>-->
-<!--            <a-button-->
-<!--                size="small"-->
-<!--                :style="{ marginLeft: 16, verticalAlign: 'middle' }"-->
-<!--                @click="changeValue"-->
-<!--                v-if="modify"-->
-<!--            >-->
-<!--              改变-->
-<!--            </a-button>-->
-<!--          </a-form-item>-->
+          <!--          <a-form-item label="头像" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">-->
+          <!--            <a-avatar-->
+          <!--                shape="square"-->
+          <!--                size="large"-->
+          <!--                :style="{ backgroundColor: color, verticalAlign: 'middle' }"-->
+          <!--            >-->
+          <!--              {{ avatarValue }}-->
+          <!--            </a-avatar>-->
+          <!--            <a-divider type="vertical"></a-divider>-->
+          <!--            <a-button-->
+          <!--                size="small"-->
+          <!--                :style="{ marginLeft: 16, verticalAlign: 'middle' }"-->
+          <!--                @click="changeValue"-->
+          <!--                v-if="modify"-->
+          <!--            >-->
+          <!--              改变-->
+          <!--            </a-button>-->
+          <!--          </a-form-item>-->
           <a-form-item label="用户名" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1  }">
             <a-input
                 placeholder="请填写用户名"
@@ -59,12 +59,12 @@
           <a-form-item label="信用值" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
             <span>{{ userInfo.credit }}</span>
           </a-form-item>
-<!--          <a-form-item label="密码" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }" v-if="modify">-->
-<!--            <a-input-->
-<!--                placeholder="请输入新密码"-->
-<!--                v-decorator="['password', { rules: [{ required: true, message: '请输入新密码' }] }]"-->
-<!--            />-->
-<!--          </a-form-item>-->
+          <!--          <a-form-item label="密码" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }" v-if="modify">-->
+          <!--            <a-input-->
+          <!--                placeholder="请输入新密码"-->
+          <!--                v-decorator="['password', { rules: [{ required: true, message: '请输入新密码' }] }]"-->
+          <!--            />-->
+          <!--          </a-form-item>-->
           <a-form-item :wrapper-col="{ span: 12, offset: 5 }" v-if="modify">
             <a-button type="primary" @click="saveModify">
               保存
@@ -173,64 +173,64 @@
           </a-form-item>
         </div>
       </a-tab-pane>
-<!--      <a-tab-pane tab="会员中心" key="4" v-if="userInfo.userType==='Client'">-->
-<!--        <div class="vip-info" v-if="userInfo.isVIP>0">-->
-<!--          <a-row>-->
-<!--            <a-col :span="1">-->
-<!--            </a-col>-->
-<!--            <a-col :span="9">-->
-<!--              <div class="info">-->
-<!--                <a-form :form="form" style="margin-top: 30px">-->
-<!--                  <a-form-item label="会员等级" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1  }">-->
-<!--                    <a-rate style="font-size: 15px" :value="userInfo.isVIP" disabled/>-->
-<!--                    <a-tag color="#2db7f5">-->
-<!--                      level{{ userInfo.isVIP }}-->
-<!--                    </a-tag>-->
-<!--                  </a-form-item>-->
+      <!--      <a-tab-pane tab="会员中心" key="4" v-if="userInfo.userType==='Client'">-->
+      <!--        <div class="vip-info" v-if="userInfo.isVIP>0">-->
+      <!--          <a-row>-->
+      <!--            <a-col :span="1">-->
+      <!--            </a-col>-->
+      <!--            <a-col :span="9">-->
+      <!--              <div class="info">-->
+      <!--                <a-form :form="form" style="margin-top: 30px">-->
+      <!--                  <a-form-item label="会员等级" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1  }">-->
+      <!--                    <a-rate style="font-size: 15px" :value="userInfo.isVIP" disabled/>-->
+      <!--                    <a-tag color="#2db7f5">-->
+      <!--                      level{{ userInfo.isVIP }}-->
+      <!--                    </a-tag>-->
+      <!--                  </a-form-item>-->
 
-<!--                  <a-form-item v-if="userInfo.corporationName.length>0" label="合作企业" :label-col="{ span: 3 }"-->
-<!--                               :wrapper-col="{ span: 8, offset: 1 }">-->
-<!--                    <a-tag color="orange">-->
-<!--                      {{ userInfo.corporationName }}-->
-<!--                    </a-tag>-->
-<!--                  </a-form-item>-->
-<!--                  <a-form-item v-else :wrapper-col="{ span: 8, offset: 1  }">-->
-<!--                    <a-button type="primary" @click="improveVip">-->
-<!--                      <a-icon type="rise"/>-->
-<!--                      升级为企业会员-->
-<!--                    </a-button>-->
-<!--                  </a-form-item>-->
+      <!--                  <a-form-item v-if="userInfo.corporationName.length>0" label="合作企业" :label-col="{ span: 3 }"-->
+      <!--                               :wrapper-col="{ span: 8, offset: 1 }">-->
+      <!--                    <a-tag color="orange">-->
+      <!--                      {{ userInfo.corporationName }}-->
+      <!--                    </a-tag>-->
+      <!--                  </a-form-item>-->
+      <!--                  <a-form-item v-else :wrapper-col="{ span: 8, offset: 1  }">-->
+      <!--                    <a-button type="primary" @click="improveVip">-->
+      <!--                      <a-icon type="rise"/>-->
+      <!--                      升级为企业会员-->
+      <!--                    </a-button>-->
+      <!--                  </a-form-item>-->
 
-<!--                </a-form>-->
-<!--              </div>-->
-<!--            </a-col>-->
-<!--            <a-col :span="12">-->
-<!--              <a-card style="width: 700px;">-->
-<!--                <img-->
-<!--                    v-if="userInfo.corporationName.length>0"-->
-<!--                    alt="example"-->
-<!--                    src="https://obsidian-test.oss-cn-beijing.aliyuncs.com/QQ20200703-0.png"-->
-<!--                    slot="cover"-->
-<!--                    referrerPolicy="no-referrer"-->
-<!--                />-->
-<!--                <img-->
-<!--                    v-else-->
-<!--                    alt="example"-->
-<!--                    src="https://obsidian-test.oss-cn-beijing.aliyuncs.com/QQ20200703-1.png"-->
-<!--                    slot="cover"-->
-<!--                    referrerPolicy="no-referrer"-->
-<!--                />-->
-<!--              </a-card>-->
-<!--            </a-col>-->
-<!--          </a-row>-->
-<!--        </div>-->
+      <!--                </a-form>-->
+      <!--              </div>-->
+      <!--            </a-col>-->
+      <!--            <a-col :span="12">-->
+      <!--              <a-card style="width: 700px;">-->
+      <!--                <img-->
+      <!--                    v-if="userInfo.corporationName.length>0"-->
+      <!--                    alt="example"-->
+      <!--                    src="https://obsidian-test.oss-cn-beijing.aliyuncs.com/QQ20200703-0.png"-->
+      <!--                    slot="cover"-->
+      <!--                    referrerPolicy="no-referrer"-->
+      <!--                />-->
+      <!--                <img-->
+      <!--                    v-else-->
+      <!--                    alt="example"-->
+      <!--                    src="https://obsidian-test.oss-cn-beijing.aliyuncs.com/QQ20200703-1.png"-->
+      <!--                    slot="cover"-->
+      <!--                    referrerPolicy="no-referrer"-->
+      <!--                />-->
+      <!--              </a-card>-->
+      <!--            </a-col>-->
+      <!--          </a-row>-->
+      <!--        </div>-->
 
-<!--        <div class="register" v-else>-->
-<!--          <a-button type="primary" style="margin-left: 30px" @click="beVip">-->
-<!--            注册会员-->
-<!--          </a-button>-->
-<!--        </div>-->
-<!--      </a-tab-pane>-->
+      <!--        <div class="register" v-else>-->
+      <!--          <a-button type="primary" style="margin-left: 30px" @click="beVip">-->
+      <!--            注册会员-->
+      <!--          </a-button>-->
+      <!--        </div>-->
+      <!--      </a-tab-pane>-->
     </a-tabs>
     <CheckOrderModal></CheckOrderModal>
     <AddCommentModal></AddCommentModal>
@@ -295,6 +295,7 @@ export default {
   name: 'info',
   data() {
     return {
+      activeKey: "1",
       avatarValue: "1",
       color: colorList[0],
       modify: false,
@@ -317,7 +318,11 @@ export default {
       'userOrderList',
       'addCommentVisible',
       'activeOrderId',
-    ])
+    ]),
+  },
+  created() {
+    let defaultTab = this.$route.query.toTab;
+    if (defaultTab) this.activeKey = defaultTab;
   },
   async mounted() {
     console.log(this.userInfo)
@@ -327,6 +332,9 @@ export default {
   },
   methods: {
     moment,
+    changeKey(key) {
+      this.activeKey = key;
+    },
     changeValue() {
       const index = colorList.indexOf(this.color);
       this.color = index < colorList.length - 1 ? colorList[index + 1] : colorList[0];
@@ -336,8 +344,8 @@ export default {
       'set_activeOrderId',
       'set_commentParams',
       'set_enrollVIPVisible',
-        'set_checkOrderParams',
-        'set_checkOrderModalVisible'
+      'set_checkOrderParams',
+      'set_checkOrderModalVisible'
     ]),
     ...mapActions([
       'getUserInfo',
