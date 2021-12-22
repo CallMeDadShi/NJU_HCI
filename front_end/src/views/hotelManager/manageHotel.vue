@@ -1,8 +1,39 @@
 <template>
   <div class="manageHotel-wrapper">
     <a-tabs>
+      <a-tab-pane tab="订单管理" key="1">
+        <a-table
+            :columns="columns2"
+            :dataSource="orderList"
+            bordered
+        >
+                    <span slot="price" slot-scope="text">
+                        <span>￥{{ text }}</span>
+                    </span>
+          <span slot="roomType" slot-scope="text">
+                        <span v-if="text == 'BigBed'">大床房</span>
+                        <span v-if="text == 'DoubleBed'">双床房</span>
+                        <span v-if="text == 'Family'">家庭房</span>
+                    </span>
+          <span slot="action" slot-scope="record">
 
-      <a-tab-pane tab="优惠策略" key="1">
+                        <a-button type="primary" size="small" @click="confirmOrders(record)"
+                                  v-if="record.orderState=='已预订'">确认入住</a-button>
+                        <a-divider type="vertical" v-if="record.orderState=='已预订'"></a-divider>
+                        <a-popconfirm
+                            title="确定想删除该订单吗？"
+                            @confirm="deleteOrder(record)"
+                            okText="确定"
+                            cancelText="取消"
+                        >
+                            <a-button type="danger" size="small">删除订单</a-button>
+                        </a-popconfirm>
+                         <a-divider type="vertical"></a-divider>
+                        <a-button type="primary" size="small" @click="changeOrder(record)">修改订单</a-button>
+                    </span>
+        </a-table>
+      </a-tab-pane>
+      <a-tab-pane tab="优惠策略" key="2">
         <div style="width: 100%; text-align: right; margin:20px 0">
           <a-button type="primary" @click="addCoupon">
             <a-icon type="plus"/>
@@ -52,38 +83,7 @@
       </a-tab-pane>
 
 
-      <a-tab-pane tab="订单管理" key="2">
-        <a-table
-            :columns="columns2"
-            :dataSource="orderList"
-            bordered
-        >
-                    <span slot="price" slot-scope="text">
-                        <span>￥{{ text }}</span>
-                    </span>
-          <span slot="roomType" slot-scope="text">
-                        <span v-if="text == 'BigBed'">大床房</span>
-                        <span v-if="text == 'DoubleBed'">双床房</span>
-                        <span v-if="text == 'Family'">家庭房</span>
-                    </span>
-          <span slot="action" slot-scope="record">
 
-                        <a-button type="primary" size="small" @click="confirmOrders(record)"
-                                  v-if="record.orderState=='已预订'">确认入住</a-button>
-                        <a-divider type="vertical" v-if="record.orderState=='已预订'"></a-divider>
-                        <a-popconfirm
-                            title="确定想删除该订单吗？"
-                            @confirm="deleteOrder(record)"
-                            okText="确定"
-                            cancelText="取消"
-                        >
-                            <a-button type="danger" size="small">删除订单</a-button>
-                        </a-popconfirm>
-                         <a-divider type="vertical"></a-divider>
-                        <a-button type="primary" size="small" @click="changeOrder(record)">修改订单</a-button>
-                    </span>
-        </a-table>
-      </a-tab-pane>
 
     </a-tabs>
     <Coupon></Coupon>

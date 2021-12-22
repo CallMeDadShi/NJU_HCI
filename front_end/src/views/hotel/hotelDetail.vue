@@ -2,11 +2,19 @@
   <a-layout>
     <a-layout-content>
       <div class="hotelDetailCard">
-        <h1>
-          {{ currentHotelInfo.title }}
-        </h1>
+        <div class="headerLine">
+          <h1 style="width: 50%">
+            {{ currentHotelInfo.name }}
+          </h1>
+          <p class="font-italic" style="width: 50%">
+            <a-icon type="environment" />  地点：  {{ currentHotelInfo.address }}
+          </p>
+          <p class="font-italic" style="width: 50%">
+            <a-icon type="tag" />  商圈： {{ currentHotelInfo.bizRegion }}
+          </p>
+        </div>
         <div class="hotel-info">
-          <a-card class="hotel_img" style="width: 500px;" >
+          <a-card class="hotel_img" style="max-width: 500px;margin-top: 10px;margin-left: 10px" >
             <img
                 alt="example"
                 :src="image_url"
@@ -14,8 +22,57 @@
                 referrerPolicy="no-referrer"
             />
           </a-card>
+          <v-row
+              align="center"
+              class="mx-0"
+              style="font-size: 30px;"
+          >
+            <a-rate style="font-size: 20px;margin-left: 10px" :value="currentHotelInfo.hotelStar" disabled allowHalf />
 
-          <div class="info" >
+            <a-alert :message=currentHotelInfo.rate type="info" style="height: 40px"/>
+          </v-row>
+          <v-card
+              class="mx-auto"
+              color="#7dc5eb"
+              dark
+              max-width="300"
+              max-height="200"
+          >
+            <v-card-title>
+              <a-icon type="smile" theme="twoTone" />
+              <span class="text-h6 font-weight-light">精选评论</span>
+            </v-card-title>
+
+            <v-card-text class="text-h5 font-weight-bold">
+              "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
+            </v-card-text>
+
+            <v-card-actions>
+              <v-list-item class="grow">
+                <v-list-item-avatar color="grey darken-3">
+                  <v-img
+                      class="elevation-6"
+                      alt=""
+                      src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+                  ></v-img>
+                </v-list-item-avatar>
+
+                <v-list-item-content>
+                  <v-list-item-title>Frank</v-list-item-title>
+                </v-list-item-content>
+
+                <v-row
+                    align="center"
+                    justify="end"
+                >
+                  <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96" />
+                  <span class="subheading">45</span>
+                </v-row>
+              </v-list-item>
+            </v-card-actions>
+          </v-card>
+
+          <div class="info"  v-if="modify">
             <a-form :form="form" style="margin-top: 10px;">
               <a-form-item label="酒店名称" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3  }">
                 <a-input
@@ -94,7 +151,7 @@
         </div>
 
         <a-divider></a-divider>
-        <a-tabs>
+        <a-tabs type="card">
           <a-tab-pane tab="房间信息" key="1">
             <div style="width: 100%; text-align: left; margin:20px 0">
               <a-range-picker v-if="userInfo.userType=='Client'" @change="onChange"/>
@@ -324,79 +381,79 @@ export default {
 
     ]),
 
-  order(record) {
-    this.set_currentOrderRoom(record)
-    this.set_orderModalVisible(true)
-  },
-  onChange(date, dateString) {
-    console.log(date, dateString);
-    this.searchRoomlByDate({
-      start: dateString[0],
-      end: dateString[1]
-    })
-    if (dateString[0] == "" && dateString[1] == "") {
-      this.flag = true
-    } else this.flag = false
-  },
-  saveModify() {
-    this.form.validateFields((err, values) => {
-      if (!err) {
-        const data = {
-          name: this.form.getFieldValue('name'),
-          address: this.form.getFieldValue('address'),
-          bizRegion: this.form.getFieldValue('bizRegion'),
-          hotelStar: this.values,
-          description: this.form.getFieldValue('description'),
-          id: this.currentHotelInfo.id
-        }
-        this.updateHotelInfo(data).then(() => {
-          this.modify = false
-        })
-      }
-    });
-  },
-
-
-  cancelModify() {
-    this.modify = false
-  },
-  modifyInfo() {
-    console.log(this.currentHotelInfo)
-    setTimeout(() => {
-      this.form.setFieldsValue({
-        'name': this.currentHotelInfo.name,
-        'address': this.currentHotelInfo.address,
-        'bizRegion': this.currentHotelInfo.bizRegion,
-        'hotelStar': this.values,
-        'description': this.currentHotelInfo.description,
+    order(record) {
+      this.set_currentOrderRoom(record)
+      this.set_orderModalVisible(true)
+    },
+    onChange(date, dateString) {
+      console.log(date, dateString);
+      this.searchRoomlByDate({
+        start: dateString[0],
+        end: dateString[1]
       })
-    }, 0)
-    this.modify = true
-  },
-  testMethods() {
+      if (dateString[0] == "" && dateString[1] == "") {
+        this.flag = true
+      } else this.flag = false
+    },
+    saveModify() {
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          const data = {
+            name: this.form.getFieldValue('name'),
+            address: this.form.getFieldValue('address'),
+            bizRegion: this.form.getFieldValue('bizRegion'),
+            hotelStar: this.values,
+            description: this.form.getFieldValue('description'),
+            id: this.currentHotelInfo.id
+          }
+          this.updateHotelInfo(data).then(() => {
+            this.modify = false
+          })
+        }
+      });
+    },
 
-  },
-  updateUrls(data) {
-    this.updateUrl(data)
-  },
-  async testUpload(file) {
-    try {
-      //object-name可以自定义为文件名（例如file.txt）或目录（例如abc/test/file.txt）的形式，实现将文件上传至当前Bucket或Bucket下的指定目录。
-      let result = await client.put('hotel/' + file.file.name, file.file);
-      const tempData = {
-        url: result.url
+
+    cancelModify() {
+      this.modify = false
+    },
+    modifyInfo() {
+      console.log(this.currentHotelInfo)
+      setTimeout(() => {
+        this.form.setFieldsValue({
+          'name': this.currentHotelInfo.name,
+          'address': this.currentHotelInfo.address,
+          'bizRegion': this.currentHotelInfo.bizRegion,
+          'hotelStar': this.values,
+          'description': this.currentHotelInfo.description,
+        })
+      }, 0)
+      this.modify = true
+    },
+    testMethods() {
+
+    },
+    updateUrls(data) {
+      this.updateUrl(data)
+    },
+    async testUpload(file) {
+      try {
+        //object-name可以自定义为文件名（例如file.txt）或目录（例如abc/test/file.txt）的形式，实现将文件上传至当前Bucket或Bucket下的指定目录。
+        let result = await client.put('hotel/' + file.file.name, file.file);
+        const tempData = {
+          url: result.url
+        }
+        await this.updateUrls(tempData)
+
+      } catch (e) {
+        console.log(e);
       }
-      await this.updateUrls(tempData)
+      return new Promise(resolve => {
 
-    } catch (e) {
-      console.log(e);
-    }
-    return new Promise(resolve => {
+      });
+    },
 
-    });
-  },
-
-}
+  }
 }
 </script>
 <style scoped lang="less">
@@ -408,9 +465,9 @@ export default {
   margin:auto;
 }
 .amap-wrapper {
-  margin-left: 150px;
-  width: 400px;
-  height: 400px;
+  //margin-left: 150px;
+  width: 200px;
+  height: 200px;
 }
 
 .hotel-info {
