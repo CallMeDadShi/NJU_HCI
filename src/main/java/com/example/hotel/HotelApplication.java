@@ -12,4 +12,5 @@ public class HotelApplication {
         SpringApplication.run(HotelApplication.class, args);
     }
 //2020-06-07-11:20 update by NaCN
+    //
 }
