@@ -2,153 +2,160 @@
   <a-layout>
     <a-layout-content>
       <div class="hotelDetailCard">
-        <div class="headerLine">
-          <h1 style="width: 50%">
-            {{ currentHotelInfo.name }}
-          </h1>
-          <p class="font-italic" style="width: 50%">
-            <a-icon type="environment" />  地点：  {{ currentHotelInfo.address }}
-          </p>
-          <p class="font-italic" style="width: 50%">
-            <a-icon type="tag" />  商圈： {{ currentHotelInfo.bizRegion }}
-          </p>
-        </div>
-        <div class="hotel-info">
-          <a-card class="hotel_img" style="max-width: 500px;margin-top: 10px;margin-left: 10px" >
-            <img
-                alt="example"
-                :src="image_url"
-                slot="cover"
-                referrerPolicy="no-referrer"
-            />
-          </a-card>
-          <v-row
-              align="center"
-              class="mx-0"
-              style="font-size: 30px;"
-          >
-            <a-rate style="font-size: 20px;margin-left: 10px" :value="currentHotelInfo.hotelStar" disabled allowHalf />
-
-            <a-alert :message=currentHotelInfo.rate type="info" style="height: 40px"/>
-          </v-row>
-          <v-card
-              class="mx-auto"
-              color="#7dc5eb"
-              dark
-              max-width="300"
-              max-height="200"
-          >
-            <v-card-title>
-              <a-icon type="smile" theme="twoTone" />
-              <span class="text-h6 font-weight-light">精选评论</span>
-            </v-card-title>
-
-            <v-card-text class="text-h5 font-weight-bold">
-              "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-            </v-card-text>
-
-            <v-card-actions>
-              <v-list-item class="grow">
-                <v-list-item-avatar color="grey darken-3">
-                  <v-img
-                      class="elevation-6"
-                      alt=""
-                      src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
-                  ></v-img>
-                </v-list-item-avatar>
-
-                <v-list-item-content>
-                  <v-list-item-title>Frank</v-list-item-title>
-                </v-list-item-content>
-
-                <v-row
-                    align="center"
-                    justify="end"
-                >
-                  <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96" />
-                  <span class="subheading">45</span>
-                </v-row>
-              </v-list-item>
-            </v-card-actions>
-          </v-card>
-
-          <div class="info"  v-if="modify">
-            <a-form :form="form" style="margin-top: 10px;">
-              <a-form-item label="酒店名称" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3  }">
-                <a-input
-                    placeholder="请填写酒店名称"
-                    v-decorator="['name', { rules: [{ required: true, message: '请输入酒店名称' }] }]"
-                    v-if="modify"
-                />
-                <span v-else>{{ currentHotelInfo.name }}</span>
-              </a-form-item>
-              <a-form-item label="地址" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
-                <a-input
-                    placeholder="请填写酒店地址"
-                    v-decorator="['address', { rules: [{ required: true, message: '请输入酒店地址' }] }]"
-                    v-if="modify"
-                />
-                <span v-else>{{ currentHotelInfo.address }}</span>
-              </a-form-item>
-              <a-form-item label="商圈" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
-                <a-input
-                    placeholder="请填写酒店所在商圈"
-                    v-decorator="['bizRegion', { rules: [{ required: true, message: '请输入酒店所在商圈' }] }]"
-                    v-if="modify"
-                />
-                <span v-else>{{ currentHotelInfo.bizRegion }}</span>
-              </a-form-item>
-              <a-form-item label="评分" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
-                <span class="value">{{ currentHotelInfo.rate }}</span>
-              </a-form-item>
-
-              <a-form-item label="星级" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
-                <a-rate style="font-size: 15px" v-if="modify" v-model="values"/>
-                <a-rate style="font-size: 15px" :value="currentHotelInfo.hotelStar" v-else disabled/>
-              </a-form-item>
-
-              <a-form-item label="酒店简介" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
-                <a-input
-                    placeholder="请填写酒店简介"
-                    v-decorator="['description', { rules: [{ required: true, message: '请输入酒店简介' }] }]"
-                    v-if="modify"
-                />
-                <span v-else >{{ currentHotelInfo.description }}</span>
-              </a-form-item>
-              <a-form-item :wrapper-col="{ span: 12, offset: 5 }" v-if="modify">
-                <a-button type="primary" @click="saveModify">
-                  保存
-                </a-button>
-                <a-button type="default" style="margin-left: 10px" @click="cancelModify">
-                  取消
-                </a-button>
-              </a-form-item>
-              <a-form-item :wrapper-col="{ span: 8, offset: 4 }" v-else-if="userInfo.userType=='HotelManager'">
-                <a-button type="primary" @click="modifyInfo">
-                  修改信息
-                </a-button>
-              </a-form-item>
-            </a-form>
-            <div style=" margin-left: 40px;">
-              <a-upload
-                  v-if="userInfo.userType=='HotelManager'"
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  list-type="text"
-                  :customRequest="testUpload"
-                  :fileList="temp"
-              >
-                <a-button>
-                  <a-icon type="upload"/>
-                  重新上传图片
-                </a-button>
-              </a-upload>
+        <div class="hotel-info" >
+          <div class="text-pic-container" style="width: 70%;">
+            <div class="headerLine">
+              <h1 style="width: 50%">
+                {{ currentHotelInfo.name }}        <a-rate style="font-size: 10px;" :value="currentHotelInfo.hotelStar" disabled allowHalf />
+              </h1>
+              <p class="font-italic" style="width: 50%">
+                <a-icon type="environment" />  地点：  {{ currentHotelInfo.address }}
+              </p>
+              <p class="font-italic" style="width: 50%">
+                <a-icon type="tag" />  商圈： {{ currentHotelInfo.bizRegion }}
+              </p>
             </div>
-
+            <div class="picture-container">
+              <a-card class="hotel_img" >
+                <img
+                    alt="example"
+                    :src="image_url"
+                    slot="cover"
+                    referrerPolicy="no-referrer"
+                />
+              </a-card>
+            </div>
           </div>
-          <div class="amap-wrapper" style="margin-top: 50px">
-            <el-amap class="amap-box" :vid="'amap-vue'"></el-amap>
+
+          <div class="right-part-container" style="display: flex;flex-direction: column;margin: 30px;margin-top:30px;margin-right: 0">
+            <div class="comment-container" v-if="modify===true" style=" padding: 5px;padding-top: 20px;padding-bottom: 0">
+              <v-container>
+                <v-row>
+                  <v-card
+                      class="mx-auto"
+                      color="#7dc5eb"
+                      dark
+                      max-width="500px"
+                      max-height="190px"
+                  >
+                    <v-card-title>
+                      <a-icon type="smile" theme="twoTone" />
+                      <span class="text-h6 font-weight-light">精选评论</span>
+                    </v-card-title>
+
+                    <v-card-text class="text-h5 font-weight-bold">
+                      "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
+                    </v-card-text>
+
+                    <v-card-actions>
+                      <v-list-item class="grow">
+                        <v-list-item-avatar color="grey darken-3">
+                          <v-img
+                              class="elevation-6"
+                              alt=""
+                              src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+                          ></v-img>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title>Frank</v-list-item-title>
+                        </v-list-item-content>
+
+                        <v-row
+                            align="center"
+                            justify="end"
+                        >
+                          <a-icon type="heart" theme="twoTone" two-tone-color="#eb2f96" />
+                          <span class="subheading">45</span>
+                        </v-row>
+                      </v-list-item>
+                    </v-card-actions>
+                  </v-card>
+                </v-row>
+              </v-container>
+
+            </div>
+            <div class="map-container" v-if="modify===true">
+              <div class="amap-wrapper" style="padding-top: 40px">
+                <el-amap class="amap-box" :vid="'amap-vue'"></el-amap>
+              </div>
+            </div>
+            <div class="info"  v-if="modify">
+              <a-form :form="form" style="margin-top: 10px;">
+                <a-form-item label="酒店名称" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3  }">
+                  <a-input
+                      placeholder="请填写酒店名称"
+                      v-decorator="['name', { rules: [{ required: true, message: '请输入酒店名称' }] }]"
+                      v-if="modify"
+                  />
+                  <span v-else>{{ currentHotelInfo.name }}</span>
+                </a-form-item>
+                <a-form-item label="地址" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
+                  <a-input
+                      placeholder="请填写酒店地址"
+                      v-decorator="['address', { rules: [{ required: true, message: '请输入酒店地址' }] }]"
+                      v-if="modify"
+                  />
+                  <span v-else>{{ currentHotelInfo.address }}</span>
+                </a-form-item>
+                <a-form-item label="商圈" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
+                  <a-input
+                      placeholder="请填写酒店所在商圈"
+                      v-decorator="['bizRegion', { rules: [{ required: true, message: '请输入酒店所在商圈' }] }]"
+                      v-if="modify"
+                  />
+                  <span v-else>{{ currentHotelInfo.bizRegion }}</span>
+                </a-form-item>
+                <a-form-item label="评分" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
+                  <span class="value">{{ currentHotelInfo.rate }}</span>
+                </a-form-item>
+
+                <a-form-item label="星级" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
+                  <a-rate style="font-size: 15px" v-if="modify" v-model="values"/>
+                  <a-rate style="font-size: 15px" :value="currentHotelInfo.hotelStar" v-else disabled/>
+                </a-form-item>
+
+                <a-form-item label="酒店简介" :label-col="{ span: 10 }" :wrapper-col="{ span: 10, offset: 3 }">
+                  <a-input
+                      placeholder="请填写酒店简介"
+                      v-decorator="['description', { rules: [{ required: true, message: '请输入酒店简介' }] }]"
+                      v-if="modify"
+                  />
+                  <span v-else >{{ currentHotelInfo.description }}</span>
+                </a-form-item>
+                <a-form-item :wrapper-col="{ span: 12, offset: 5 }" v-if="modify">
+                  <a-button type="primary" @click="saveModify">
+                    保存
+                  </a-button>
+                  <a-button type="default" style="margin-left: 10px" @click="cancelModify">
+                    取消
+                  </a-button>
+                </a-form-item>
+                <a-form-item :wrapper-col="{ span: 8, offset: 4 }" v-else-if="userInfo.userType=='HotelManager'">
+                  <a-button type="primary" @click="modifyInfo">
+                    修改信息
+                  </a-button>
+                </a-form-item>
+              </a-form>
+              <div style=" margin-left: 40px;">
+                <a-upload
+                    v-if="userInfo.userType=='HotelManager'"
+                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    list-type="text"
+                    :customRequest="testUpload"
+                    :fileList="temp"
+                >
+                  <a-button>
+                    <a-icon type="upload"/>
+                    重新上传图片
+                  </a-button>
+                </a-upload>
+              </div>
+
+            </div>
           </div>
         </div>
+
 
         <a-divider></a-divider>
         <a-tabs type="card">
@@ -465,9 +472,8 @@ export default {
   margin:auto;
 }
 .amap-wrapper {
-  //margin-left: 150px;
-  width: 200px;
-  height: 200px;
+  width: 500px;
+  height: 350px;
 }
 
 .hotel-info {
